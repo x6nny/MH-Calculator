@@ -129,6 +129,25 @@ tbody tr:nth-child(odd) td{background:#333}
 .rb-form input.bad{border-color:#d36868}
 .field-msg{font-size:11px;color:var(--muted);min-height:13px;line-height:13px;margin-top:2px}
 .field-msg.bad{color:#ff7a7a}
+.pf-table td,.pf-rules td{height:calc(var(--slot) + 6px)}
+.pf-table .stepper input{width:52px}
+.pf-rules input{width:64px;text-align:right;min-height:0;height:calc(var(--line-height) + 2px);border-radius:0;padding:0 4px}
+.pf-cur{color:var(--muted);font-weight:400;font-size:11px;margin-left:3px}
+.unconf{color:#fdcb58;cursor:help}
+.pf-table .size{color:var(--muted);white-space:nowrap}
+.pf-summary .rb-input{max-width:120px}
+.pf-summary colgroup{display:none}
+.pf-summary thead th:first-child{width:110px}
+.pf-summary tbody th{background:#383838;color:#eee;font-weight:600;text-align:right;padding:3px 8px;white-space:nowrap;box-shadow:inset -1px 0 #555,inset 0 -1px #4a4a4a}
+.pf-summary tr.pf-have-row td{height:calc(var(--slot) + 14px)}
+.pf-summary .pf-na .rb-input{opacity:.75}
+.pf-summary .pf-na .sub{margin-top:1px}
+.pf-each{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:10px;align-items:start}
+.pf-each h4{margin:0 0 3px;font-size:var(--text-size);color:#eee;display:flex;justify-content:space-between;gap:6px}
+.pf-each h4 span{color:var(--muted);font-weight:400}
+.pf-each .scroll{max-height:260px;overflow:auto;border:1px solid #4a4a4a}
+.pf-each td{padding:1px 6px}
+.pf-each thead th{position:sticky;top:0}
 @media (max-width:760px){
  .topbar{flex-wrap:wrap}
  .summary,.summary tbody{display:block;width:100%}
@@ -140,12 +159,24 @@ tbody tr:nth-child(odd) td{background:#333}
  .ms-head,.ms-row{grid-template-columns:18px minmax(0,1fr) 78px 52px}
  .ms-head span:nth-child(5),.ms-head span:nth-child(6),.ms-row .c-len,.ms-row .c-qty{display:none}
  .tier-badge{width:auto}
+ .pf-summary tbody{display:grid!important;grid-template-columns:1fr 1fr}
+ .pf-summary tbody tr{display:contents!important}
+ .pf-summary tbody th{grid-column:1/-1;text-align:left;display:block}
+ .pf-summary tr.pf-have-row td{height:auto}
+ .pf-summary td:first-child{grid-column:auto!important}
+ .pf-summary .pf-have-row th{order:0}.pf-summary .pf-have-row td{order:1}
+ .pf-summary .pf-buy-row th{order:2}.pf-summary .pf-buy-row td{order:3}
+ .pf-summary td.big{order:4!important}
+ .pf-table th:nth-child(2),.pf-table td.size,.pf-table .tier-badge{display:none}
+ .pf-table .stepper button{width:18px}
+ .pf-table .stepper input{width:34px}
+ .pf-table td.numeric{white-space:normal}
 }
 </style>
 </head>
 <body>
 <header class="topbar">
- <nav class="tabs" role="tablist" aria-label="Pages"><button type="button" class="tab" role="tab" id="tab-calc" aria-controls="page-calc" aria-selected="true">Calculator</button><button type="button" class="tab" role="tab" id="tab-rebirth" aria-controls="page-rebirth" aria-selected="false" tabindex="-1">Rebirth</button></nav>
+ <nav class="tabs" role="tablist" aria-label="Pages"><button type="button" class="tab" role="tab" id="tab-calc" aria-controls="page-calc" aria-selected="true">Calculator</button><button type="button" class="tab" role="tab" id="tab-rebirth" aria-controls="page-rebirth" aria-selected="false" tabindex="-1">Rebirth</button><button type="button" class="tab" role="tab" id="tab-platforms" aria-controls="page-platforms" aria-selected="false" tabindex="-1">Platforms</button></nav>
  <div class="top-right">
   <span id="data-status"></span>
   <button type="button" class="icon-btn" id="load-btn" title="Read item data from an updated copy of the MPU site's index.html">
@@ -261,6 +292,72 @@ tbody tr:nth-child(odd) td{background:#333}
   </section>
  </div>
  <p class="note"><b>How it's calculated:</b> each rebirth gives skips + 1 lives (20 skips = 21 lives). Rebirths per hour = 3600 ÷ speed, and lives per hour = rebirths per hour × lives per rebirth. Every skip multiplies the cash you need by 1,000, so 20 skips need price × 10<sup>60</sup>. When the price field is blank, it is estimated from the life ranges in the MPU site's suffix list: the price climbs smoothly through each suffix's life range and is capped at 10 NVSPTGNTL (10<sup>241</sup>) from life 80,351. Time to target assumes every rebirth takes the same number of seconds.</p>
+</div>
+
+<div id="page-platforms" role="tabpanel" aria-labelledby="tab-platforms" hidden>
+ <section class="panel" aria-labelledby="pf-title">
+  <div class="panel-title" id="pf-title">Platform Cost Calculator</div>
+  <table class="summary pf-summary">
+   <thead><tr><th></th><th>Standard Platforms:</th><th>Hydraulic Platforms:</th><th>Mega Platforms:</th><th>Small Platforms:</th><th>Total Shards:</th><th>Total uC:</th></tr></thead>
+   <tbody>
+    <tr class="pf-have-row"><th scope="row">Already have:</th>
+    <td data-label="Standard Platform (already have):"><input type="number" class="rb-input pf-top" data-kind="owned" data-id="standard" min="0" step="1" placeholder="0" aria-label="Standard Platforms you already have"></td>
+    <td data-label="Hydraulic Platform (already have):"><input type="number" class="rb-input pf-top" data-kind="owned" data-id="hydraulic" min="0" step="1" placeholder="0" aria-label="Hydraulic Platforms you already have"></td>
+    <td data-label="Mega Platform (already have):"><input type="number" class="rb-input pf-top" data-kind="owned" data-id="mega" min="0" step="1" placeholder="0" aria-label="Mega Platforms you already have"></td>
+    <td data-label="Small Platform (already have):" class="pf-na" title="Small Platform prices are random and don't depend on how many you own"><input type="number" class="rb-input pf-top" data-kind="owned" data-id="small" min="0" step="1" placeholder="0" aria-label="Small Platforms you already have"><span class="sub">doesn't affect price</span></td>
+    <td class="big" rowspan="2" data-label="Total Shards:" id="pf-total-shards">0</td>
+    <td class="big" rowspan="2" data-label="Total uC:" id="pf-total-uc">0</td>
+    </tr>
+    <tr class="pf-buy-row"><th scope="row">Want to buy:</th>
+    <td data-label="Standard Platform (want to buy):"><input type="number" class="rb-input pf-top" data-kind="buy" data-id="standard" min="0" step="1" placeholder="0" aria-label="Standard Platforms you want to buy"></td>
+    <td data-label="Hydraulic Platform (want to buy):"><input type="number" class="rb-input pf-top" data-kind="buy" data-id="hydraulic" min="0" step="1" placeholder="0" aria-label="Hydraulic Platforms you want to buy"></td>
+    <td data-label="Mega Platform (want to buy):"><input type="number" class="rb-input pf-top" data-kind="buy" data-id="mega" min="0" step="1" placeholder="0" aria-label="Mega Platforms you want to buy"></td>
+    <td data-label="Small Platform (want to buy):"><input type="number" class="rb-input pf-top" data-kind="buy" data-id="small" min="0" step="1" placeholder="0" aria-label="Small Platforms you want to buy"></td>
+    </tr>
+   </tbody>
+  </table>
+ </section>
+
+ <section class="panel" aria-labelledby="pf-bd-title">
+  <div class="panel-title" id="pf-bd-title">Cost Breakdown</div>
+  <div class="breakdown-wrap">
+   <table class="breakdown pf-table">
+    <thead><tr><th>Platform</th><th>Size</th><th class="center" title="Platforms of this type you already own; this raises the price of the next ones">Already owned</th><th class="center">Amount to buy</th><th class="numeric">Next price</th><th class="numeric">Cost of purchase</th><th class="numeric">Price after</th></tr></thead>
+    <tbody id="pf-body"></tbody>
+    <tfoot id="pf-foot"></tfoot>
+   </table>
+  </div>
+ </section>
+
+ <section class="panel" aria-labelledby="pf-each-title" id="pf-each-panel" hidden>
+  <div class="panel-title" id="pf-each-title">Price of Each Platform</div>
+  <div class="panel-body pf-each" id="pf-each"></div>
+ </section>
+
+ <div class="rb-grid">
+  <section class="panel" aria-labelledby="pf-shards-title">
+   <div class="panel-title" id="pf-shards-title">Shards of Life</div>
+   <div class="panel-body rb-form">
+    <label for="pf-have">Shards you have</label><input type="number" id="pf-have" min="0" step="1" placeholder="0">
+    <label for="pf-spr">Shards per rebirth</label>
+    <div><input type="number" id="pf-spr" min="0" step="any" placeholder="auto"><div class="field-msg" id="pf-spr-msg"></div></div>
+   </div>
+   <table class="kv"><tbody id="pf-shards"></tbody></table>
+  </section>
+
+  <section class="panel" aria-labelledby="pf-rules-title">
+   <div class="panel-title" id="pf-rules-title">Price Rules</div>
+   <div class="panel-body" style="padding-bottom:4px">
+    <table class="breakdown pf-rules">
+     <thead><tr><th>Platform</th><th class="numeric">Start</th><th class="numeric">+ per buy</th><th class="numeric">for first</th><th class="numeric">then +</th></tr></thead>
+     <tbody id="pf-rules"></tbody>
+    </table>
+    <div class="toolbar" style="margin:6px 0 0"><span class="left" style="color:var(--muted);font-size:12px"><span class="unconf">⚠</span> = not confirmed on the wiki; edit it if your shop shows otherwise</span><span class="right"><button type="button" id="pf-reset">Reset to wiki values</button></span></div>
+   </div>
+  </section>
+ </div>
+ <p class="note"><b>How it's calculated:</b> each purchase raises the price of the next platform of that type. With <i>k</i> already owned, the next price is Start + (+ per buy) × min(<i>k</i>, first) + (then +) × max(0, <i>k</i> − first), and the cost of buying several is the sum of those prices. Small Platforms are sold by The Masked Man for a random 117–221 uC and don't scale. Shards per rebirth defaults to ⌊skips ÷ 2⌋ using the Rebirth tab's skips (1 Shard of Life per 2 lives skipped), and the time to earn the shards uses that tab's speed.</p>
+ <p class="note">Sources: <a href="https://minershaven.fandom.com/wiki/Category:Platform" target="_blank" rel="noopener noreferrer">Category:Platform</a>, <a href="https://minershaven.fandom.com/wiki/Hydraulic_Standard_Platform" target="_blank" rel="noopener noreferrer">Hydraulic Standard Platform</a>, <a href="https://minershaven.fandom.com/wiki/Small_Platform" target="_blank" rel="noopener noreferrer">Small Platform</a>, <a href="https://en.namu.wiki/w/Miner's%20Haven/%ED%8C%81" target="_blank" rel="noopener noreferrer">NamuWiki tips (shards per skip)</a></p>
 </div>
 </main>
 <div class="toast" id="toast" role="status" hidden></div>
@@ -558,19 +655,20 @@ $('reset-data').onclick=()=>{storage.del(DATA_KEY);useData(BUILTIN,false);state.
 
 
 /* ---------- tabs ---------- */
-const TAB_KEY='mpucalc.tab.v1'
+const TAB_KEY='mpucalc.tab.v1',TAB_NAMES=['calc','rebirth','platforms']
 function showTab(name,focus=false){
- for(const n of ['calc','rebirth']){
+ for(const n of TAB_NAMES){
   const on=n===name,tab=$('tab-'+n)
   tab.setAttribute('aria-selected',String(on));tab.tabIndex=on?0:-1;$('page-'+n).hidden=!on
   if(on&&focus)tab.focus()
  }
  if(name!=='calc')closePanel(false)
  storage.set(TAB_KEY,name)
+ if(name==='platforms'&&typeof renderPlatforms==='function')renderPlatforms()
 }
 $('tab-calc').onclick=()=>showTab('calc')
 $('tab-rebirth').onclick=()=>showTab('rebirth')
-document.querySelector('.tabs').addEventListener('keydown',ev=>{if(ev.key==='ArrowRight'||ev.key==='ArrowLeft'){ev.preventDefault();showTab($('tab-calc').getAttribute('aria-selected')==='true'?'rebirth':'calc',true)}})
+document.querySelector('.tabs').addEventListener('keydown',ev=>{if(ev.key!=='ArrowRight'&&ev.key!=='ArrowLeft')return;ev.preventDefault();const i=TAB_NAMES.findIndex(n=>$('tab-'+n).getAttribute('aria-selected')==='true');showTab(TAB_NAMES[(i+(ev.key==='ArrowRight'?1:TAB_NAMES.length-1))%TAB_NAMES.length],true)})
 
 /* ---------- cash suffixes (from the MPU site's suffix list) ---------- */
 let SUFFIX_BY_EXP=new Map(),SUFFIX_BY_ABBR=new Map(),LIFE_RANGES=[]
@@ -675,6 +773,118 @@ $('rb-speed').addEventListener('input',e=>{rb.speed=e.target.value;renderRebirth
 $('rb-skips').addEventListener('change',e=>{rb.skips=parseInt(e.target.value)||0;renderRebirth()})
 for(const k of ['life','target','price'])$('rb-'+k).addEventListener('input',e=>{rb[k]=e.target.value;renderRebirth()})
 
+
+/* ---------- platforms ---------- */
+const PF_KEY='mpucalc.platforms.v1'
+const PF_DEFAULTS=[
+ {id:'standard',name:'Standard Platform',size:'12×12, height 8',cur:'Shards',start:25,stepA:25,firstN:8,stepB:100,note:'Wiki: platforms 1 to 8 raise the price by 25, additional platforms by 100',unconf:[]},
+ {id:'hydraulic',name:'Hydraulic Standard Platform',size:'12×12, height 1–16',cur:'Shards',start:100,stepA:150,firstN:0,stepB:150,note:'Wiki: starts at 100 and rises by 150 per buy, but notes the first increases may be 50 or 100',unconf:['stepA','firstN','stepB']},
+ {id:'mega',name:'Mega Platform',size:'20×20, height 8',cur:'Shards',start:200,stepA:100,firstN:3,stepB:100,note:'Wiki: platforms 1 to 3 raise the price by 100; the increase after that was not available',unconf:['stepB']},
+ {id:'small',name:'Small Platform',size:'8×8, height 4',cur:'uC',min:117,max:221,note:'Sold by The Masked Man for a random 117–221 uC',fixed:true}
+]
+let pf={rules:{},owned:{},buy:{},have:'',spr:''}
+const pfRule=d=>({...d,...(pf.rules[d.id]||{})})
+const nInt=(v,lo=0,hi=1e6)=>Math.min(hi,Math.max(lo,Math.floor(Number(v))||0))
+function pfPrice(r,k){return Number(r.start)+Number(r.stepA)*Math.min(k,Number(r.firstN))+Number(r.stepB)*Math.max(0,k-Number(r.firstN))}
+function pfCost(r,owned,buy){let s=0;for(let k=owned;k<owned+buy;k++)s+=pfPrice(r,k);return s}
+const fmtInt=v=>Number(v).toLocaleString('en-US',{maximumFractionDigits:2})
+function renderPlatformRows(){
+ $('pf-body').innerHTML=PF_DEFAULTS.map(d=>{
+  const owned=pf.owned[d.id]||0,buy=pf.buy[d.id]||0
+  const stepper=(kind,v)=>`<span class="stepper"><button type="button" data-pf="${kind}-dec" data-id="${d.id}" aria-label="Decrease">−</button><input type="number" min="0" step="1" value="${v}" data-pf="${kind}" data-id="${d.id}" aria-label="${kind==='owned'?'Owned':'Buy'} ${esc(d.name)}"><button type="button" data-pf="${kind}-inc" data-id="${d.id}" aria-label="Increase">+</button></span>`
+  return `<tr data-row="${d.id}"><td><div class="item-line">${badge('Platform')}<a class="item-name" href="https://minershaven.fandom.com/wiki/${encodeURIComponent(d.name.replace(/ /g,'_'))}" target="_blank" rel="noopener noreferrer" title="${esc(d.note)}">${esc(d.name)}</a></div></td>
+   <td class="size">${esc(d.size)}</td><td class="center">${stepper('owned',owned)}</td><td class="center">${stepper('buy',buy)}</td>
+   <td class="numeric" data-out="next"></td><td class="numeric" data-out="cost"></td><td class="numeric" data-out="after"></td></tr>`
+ }).join('')
+}
+function renderPlatformRules(){
+ $('pf-rules').innerHTML=PF_DEFAULTS.filter(d=>!d.fixed).map(d=>{
+  const r=pfRule(d),f=k=>`<input type="number" step="1" min="0" value="${esc(r[k])}" data-rule="${k}" data-id="${d.id}" aria-label="${esc(d.name)} ${k}">${d.unconf.includes(k)?' <span class="unconf" title="'+esc(d.note)+'">⚠</span>':''}`
+  return `<tr><td title="${esc(d.note)}">${esc(d.name.replace(' Platform',''))}</td><td class="numeric">${f('start')}</td><td class="numeric">${f('stepA')}</td><td class="numeric">${f('firstN')}</td><td class="numeric">${f('stepB')}</td></tr>`
+ }).join('')+`<tr><td>Small</td><td class="numeric" colspan="4" style="color:var(--muted)">117–221 uC each, random (no scaling)</td></tr>`
+}
+function renderPlatforms(){
+ let shards=0,uMin=0,uMax=0,count=0
+ const ownedAll=PF_DEFAULTS.reduce((a,d)=>a+(pf.owned[d.id]||0),0)
+ for(const d of PF_DEFAULTS){
+  const row=document.querySelector(`#pf-body tr[data-row="${d.id}"]`);if(!row)continue
+  const buy=pf.buy[d.id]||0,owned=pf.owned[d.id]||0,cell=k=>row.querySelector(`[data-out="${k}"]`)
+  count+=buy
+  if(d.fixed){
+   cell('next').innerHTML=`${d.min}–${d.max}<span class="pf-cur">uC</span>`
+   cell('cost').innerHTML=buy?`${fmtInt(buy*d.min)}–${fmtInt(buy*d.max)}<span class="pf-cur">uC</span><span class="sub" style="display:block;color:var(--muted);font-size:11px">avg ${fmtInt(buy*(d.min+d.max)/2)}</span>`:'–'
+   cell('after').innerHTML=`${d.min}–${d.max}<span class="pf-cur">uC</span>`
+   uMin+=buy*d.min;uMax+=buy*d.max;continue
+  }
+  const r=pfRule(d),cost=pfCost(r,owned,buy);shards+=cost
+  cell('next').innerHTML=`${fmtInt(pfPrice(r,owned))}<span class="pf-cur">Shards</span>`
+  cell('cost').innerHTML=buy?`<b>${fmtInt(cost)}</b><span class="pf-cur">Shards</span>`:'–'
+  cell('after').innerHTML=`${fmtInt(pfPrice(r,owned+buy))}<span class="pf-cur">Shards</span>`
+ }
+ $('pf-total-shards').innerHTML=`${fmtInt(shards)}`
+ $('pf-total-uc').innerHTML=uMax?`${fmtInt(uMin)}–${fmtInt(uMax)}<span class="sub">avg ${fmtInt((uMin+uMax)/2)}</span>`:'0'
+ renderEachPlatform()
+ $('pf-foot').innerHTML=`<tr><td colspan="2">Total (${count} platform${count===1?'':'s'} to buy)</td><td class="center" style="font-weight:400;color:var(--muted)">${ownedAll} owned → ${ownedAll+count}</td><td></td><td></td><td class="numeric">${fmtInt(shards)}<span class="pf-cur">Shards</span>${uMax?`<br>${fmtInt(uMin)}–${fmtInt(uMax)}<span class="pf-cur">uC</span>`:''}</td><td></td></tr>`
+ // shards & time
+ const skips=rb.skips,speed=Number(rb.speed),autoSpr=Math.floor(skips/2)
+ const sprIn=pf.spr===''?null:Number(pf.spr),spr=sprIn!=null&&sprIn>=0?sprIn:autoSpr
+ $('pf-spr').placeholder=`auto: ${autoSpr}`
+ $('pf-spr-msg').textContent=sprIn!=null?'custom value':`auto from Rebirth tab: ${skips} skip${skips===1?'':'s'} ÷ 2 = ${autoSpr}`
+ const have=Math.max(0,Number(pf.have)||0),need=Math.max(0,shards-have)
+ let rows=kv('Shards needed',`${fmtInt(shards)}`)+kv('Shards you have',fmtInt(have))+kv('Still to earn',fmtInt(need))
+ if(spr>0){
+  const reb=Math.ceil(need/spr)
+  rows+=kv('Rebirths needed',fmtInt(reb),esc(`at ${fmtInt(spr)} shard${spr===1?'':'s'} per rebirth`))
+  if(speed>0){const secs=reb*speed;rows+=kv('Shards / hour',fmtInt(3600/speed*spr))+kv('Time to afford',esc(fmtDur(secs)),secs>0?esc(`${fmtInt(speed)}s per rebirth (Rebirth tab)`):'')}
+  else rows+=kv('Time to afford','–','set a speed on the Rebirth tab')
+ }else rows+=kv('Rebirths needed','–','shards per rebirth is 0 (use 2+ skips)')
+ $('pf-shards').innerHTML=rows
+ storage.set(PF_KEY,pf)
+}
+function loadPlatforms(){
+ const s=storage.get(PF_KEY)||{}
+ for(const k of ['rules','owned','buy'])if(s[k]&&typeof s[k]==='object')pf[k]=s[k]
+ for(const k of ['have','spr'])if(s[k]!=null)pf[k]=String(s[k])
+ $('pf-have').value=pf.have;$('pf-spr').value=pf.spr
+ renderPlatformRows();renderPlatformRules();syncPfInputs(null)
+}
+$('pf-body').addEventListener('click',ev=>{
+ const b=ev.target.closest('button[data-pf]');if(!b)return
+ const [kind,dir]=b.dataset.pf.split('-'),id=b.dataset.id
+ pf[kind][id]=nInt((pf[kind][id]||0)+(dir==='inc'?1:-1))
+ syncPfInputs(null);renderPlatforms()
+})
+$('pf-body').addEventListener('input',ev=>{const t=ev.target;if(!t.dataset.pf)return;if(t.value==='')return;pf[t.dataset.pf][t.dataset.id]=nInt(t.value);syncPfInputs(t);renderPlatforms()})
+$('pf-body').addEventListener('change',ev=>{const t=ev.target;if(t.dataset.pf){t.value=pf[t.dataset.pf][t.dataset.id]||0}})
+$('pf-rules').addEventListener('input',ev=>{const t=ev.target;if(!t.dataset.rule||t.value==='')return;(pf.rules[t.dataset.id]??={})[t.dataset.rule]=nInt(t.value,0,1e9);renderPlatforms()})
+
+function renderEachPlatform(){
+ const MAX=500,blocks=[]
+ for(const d of PF_DEFAULTS){
+  const buy=pf.buy[d.id]||0;if(!buy)continue
+  if(d.fixed){blocks.push(`<div><h4>${esc(d.name)} <span>${buy} × ${d.min}–${d.max} uC</span></h4><div style="color:var(--muted)">Random price each, not affected by how many you own.<br>Total ${fmtInt(buy*d.min)}–${fmtInt(buy*d.max)} uC (avg ${fmtInt(buy*(d.min+d.max)/2)})</div></div>`);continue}
+  const r=pfRule(d),owned=pf.owned[d.id]||0
+  let run=0,rows=''
+  for(let i=0;i<buy;i++){const k=owned+i,price=pfPrice(r,k);run+=price;if(i<MAX)rows+=`<tr><td>#${k+1}</td><td class="numeric">${fmtInt(price)}</td><td class="numeric">${fmtInt(run)}</td></tr>`}
+  if(buy>MAX)rows+=`<tr><td colspan="3" style="color:var(--muted);text-align:center">…${fmtInt(buy-MAX)} more, total ${fmtInt(run)}</td></tr>`
+  blocks.push(`<div><h4>${esc(d.name)} <span>${fmtInt(run)} Shards</span></h4><div class="scroll"><table><thead><tr><th>Platform</th><th class="numeric">Price</th><th class="numeric">Running total</th></tr></thead><tbody>${rows}</tbody></table></div></div>`)
+ }
+ $('pf-each-panel').hidden=!blocks.length
+ $('pf-each').innerHTML=blocks.join('')
+}
+function syncPfInputs(src){
+ document.querySelectorAll('input.pf-top').forEach(i=>{if(i!==src)i.value=pf[i.dataset.kind][i.dataset.id]||''})
+ document.querySelectorAll('#pf-body input[data-pf]').forEach(i=>{if(i!==src)i.value=pf[i.dataset.pf][i.dataset.id]||0})
+}
+document.querySelectorAll('input.pf-top').forEach(inp=>{
+ inp.addEventListener('input',()=>{pf[inp.dataset.kind][inp.dataset.id]=inp.value===''?0:nInt(inp.value);syncPfInputs(inp);renderPlatforms()})
+ inp.addEventListener('change',()=>{inp.value=pf[inp.dataset.kind][inp.dataset.id]||''})
+})
+$('pf-reset').onclick=()=>{pf.rules={};renderPlatformRules();renderPlatforms()}
+$('pf-have').addEventListener('input',e=>{pf.have=e.target.value;renderPlatforms()})
+$('pf-spr').addEventListener('input',e=>{pf.spr=e.target.value;renderPlatforms()})
+$('tab-platforms').onclick=()=>showTab('platforms')
+
 /* ---------- start ---------- */
 const savedData=storage.get(DATA_KEY)
 if(savedData?.items?.length)useData(savedData,true);else useData(BUILTIN,false)
@@ -686,7 +896,8 @@ if(initial)loadState({entries:initial.entries||[],r:initial.r,x:initial.x})
 $('resetters').value=String(state.resetters);$('extra-length').value=String(state.extra)
 update()
 loadRebirth();rbReady=true;renderRebirth()
-showTab(storage.get(TAB_KEY)==='rebirth'?'rebirth':'calc')
+loadPlatforms();renderPlatforms()
+showTab(TAB_NAMES.includes(storage.get(TAB_KEY))?storage.get(TAB_KEY):'calc')
 </script>
 </body>
 </html>
