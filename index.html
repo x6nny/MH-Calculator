@@ -170,6 +170,44 @@ tbody tr:nth-child(odd) td{background:#333}
 .sb-sub{display:block;color:var(--muted);font-size:11px;line-height:12px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .sb-surv{border-top:1px solid #535353;border-bottom:0}
 .unit-input{display:flex;align-items:center;gap:4px}.unit-input span{color:var(--muted)}
+.danger-btn{color:#ff9a9a;border-color:#6a4a4a;background:#3d3434}
+.danger-btn:hover{background:#563838;border-color:#8a5a5a}
+.danger-btn:disabled{opacity:.45;cursor:default}
+.primary-btn{background:#2f4a3a;border-color:#5cbe5c;color:#e8ffe8;font-weight:600}
+.primary-btn:hover{background:#38563f;border-color:#7ad07a}
+.sb-build-bar select{border-radius:0;min-height:calc(var(--line-height) + 9px)}
+.line-card{border:1px solid #535353;background:#333;margin-bottom:8px;min-width:0;max-width:100%}
+.line-card.over{border-color:#a04848}
+.line-card.void{border-color:#6a5aa8;background:#302d3a}
+.line-head{display:flex;flex-wrap:wrap;align-items:center;gap:6px 12px;padding:5px 8px;background:#3d3d3d;border-bottom:1px solid #4a4a4a}
+.line-head .lname{font-weight:600;color:#eee;min-width:52px}
+.line-head label{display:inline-flex;align-items:center;gap:5px;color:var(--muted)}
+.line-head input[type=number]{width:64px;border-radius:0;min-height:calc(var(--line-height) + 5px);text-align:right}
+.line-head select{border-radius:0;min-height:calc(var(--line-height) + 5px);max-width:220px}
+.line-head .spacer{flex:1}
+.line-head .lmult{font-variant-numeric:tabular-nums;color:#eee;font-weight:600}
+.cap{display:inline-flex;align-items:center;gap:6px;color:var(--muted);font-variant-numeric:tabular-nums}
+.cap-bar{width:110px;height:8px;background:#262626;border:1px solid #555;position:relative;overflow:hidden}
+.cap-bar span{position:absolute;inset:0 auto 0 0;background:#5cbe5c}
+.line-card.over .cap-bar span{background:#d36868}
+.line-card.over .cap{color:#ff8a8a}
+.line-items td{padding:1px 8px}
+.line-items .warn td{background:#3d2c2c!important}
+.line-items .warn .cond{color:#ff9a9a}
+.line-empty{padding:9px;color:var(--muted);text-align:center}
+.line-foot{padding:4px 8px;color:var(--muted);font-size:12px;border-top:1px solid #444}
+.sb-subhead{font-weight:600;color:#eee;margin:10px 0 4px}.sb-subhead span{color:var(--muted);font-weight:400}
+.sb-total{margin-top:8px}
+.sb-total td{background:#383838!important;font-weight:600;padding:5px 8px;box-shadow:inset 0 1px #666}
+.lp-panel{position:absolute;z-index:40}
+#page-builder .panel-body{position:relative}
+.lp-head,.lp-row{display:grid;grid-template-columns:minmax(0,1fr) 92px 56px 34px;gap:6px;align-items:center;padding:1px 7px}
+.lp-head span:nth-child(n+2){text-align:right}
+.lp-row{min-height:var(--slot);cursor:pointer}
+.lp-row:nth-child(even){background:#393939}
+.lp-row:hover{background:#4a4a4a}
+.lp-row.nofit{opacity:.5}
+.lp-row .num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
 .sb-status{margin:0 0 6px;padding:6px 9px;border:1px solid #535353;background:#353535}
 .sb-status.ok{border-color:#3f7a4a;background:#2c3d30}
 .sb-status.bad{border-color:#7a3f3f;background:#3d2c2c}
@@ -195,6 +233,12 @@ tbody tr:nth-child(odd) td{background:#333}
  .sb-result{min-width:760px}
  .sb-result td.cond{min-width:230px}
  .sb-row .stepper button{width:18px}
+ .line-items{min-width:640px}
+ .line-items td.cond{min-width:200px}
+ .line-head{gap:5px 8px}
+ .line-head select{max-width:180px}
+ .sb-total td{display:block;box-shadow:none}
+ #page-builder .breakdown-wrap{max-width:100%}
  .pf-summary tbody{display:grid!important;grid-template-columns:1fr 1fr}
  .pf-summary tbody tr{display:contents!important}
  .pf-summary tbody th{grid-column:1/-1;text-align:left;display:block}
@@ -415,13 +459,40 @@ tbody tr:nth-child(odd) td{background:#333}
  <section class="panel" aria-labelledby="sb-result-title">
   <div class="panel-title" id="sb-result-title">Your Setup</div>
   <div class="panel-body">
+   <div class="toolbar">
+    <span class="left" id="sb-sel-summary" style="color:var(--muted)"></span>
+    <span class="right"><button type="button" id="sb-clear-all" class="danger-btn" title="Untick every item, resetter, blaster and portable">Clear all</button></span>
+   </div>
    <div class="sb-status" id="sb-status" role="status"></div>
-   <div class="breakdown-wrap">
-    <table class="breakdown sb-result">
-     <thead><tr><th class="center">Qty</th><th>Item</th><th>Placement</th><th class="numeric">Multiplier</th><th class="numeric">Counts as</th><th class="numeric">Length</th><th>Conditions</th></tr></thead>
-     <tbody id="sb-body"></tbody>
-     <tfoot id="sb-foot"></tfoot>
-    </table>
+   <div class="toolbar sb-build-bar">
+    <span class="left">
+     <button type="button" id="sb-auto" class="primary-btn" title="Fill the lines using only the items you've marked as owned">⚡ Auto build</button>
+     <select id="sb-auto-mode" aria-label="Auto build mode"><option value="fill">Keep my picks, fill empty space</option><option value="rebuild">Rebuild every line</option></select>
+     <button type="button" id="sb-add-line">+ Add line</button>
+     <button type="button" id="sb-clear-lines" title="Remove every item from every line (keeps the lines and lengths)">Empty lines</button>
+    </span>
+   </div>
+   <div id="sb-lines"></div>
+   <div id="sb-void-line"></div>
+   <div class="sb-carried-wrap" id="sb-carried-wrap">
+    <div class="sb-subhead">Carried &amp; side items <span>(no line length)</span></div>
+    <div class="breakdown-wrap">
+     <table class="breakdown sb-result">
+      <thead><tr><th class="center">Uses</th><th>Item</th><th>How it's used</th><th class="numeric">Multiplier</th><th class="numeric">Counts as</th><th>Conditions</th></tr></thead>
+      <tbody id="sb-body"></tbody>
+     </table>
+    </div>
+   </div>
+   <table class="breakdown sb-total"><tbody id="sb-foot"></tbody></table>
+   <div class="ms-panel lp-panel" id="lp-panel" hidden>
+    <div class="ms-tools" style="grid-template-columns:minmax(0,1fr) auto">
+     <input type="search" id="lp-search" placeholder="Search items to add" aria-label="Search items to add" autocomplete="off">
+     <label style="display:inline-flex;gap:4px;align-items:center;color:var(--muted);white-space:nowrap"><input type="checkbox" id="lp-owned" checked> Only items I have</label>
+    </div>
+    <div class="ms-sub"><span id="lp-info"></span><span id="lp-count"></span></div>
+    <div class="ms-head lp-head" aria-hidden="true"><span>Item</span><span>Multiplier</span><span>Length</span><span>Fits</span></div>
+    <div class="ms-list" id="lp-list" role="listbox" aria-label="Items to add"></div>
+    <div class="ms-foot"><span>Click an item to add it to this line</span><button type="button" id="lp-done">Done</button></div>
    </div>
   </div>
  </section>
@@ -482,8 +553,6 @@ tbody tr:nth-child(odd) td{background:#333}
      <input type="number" id="sb-furnace" min="1" step="any">
      <label for="sb-price" title="Leave blank to estimate from your life">Rebirth price</label>
      <div><input type="text" id="sb-price" placeholder="auto from life" spellcheck="false" autocomplete="off"><div class="field-msg" id="sb-price-msg"></div></div>
-     <label for="sb-maxlen" title="Longest setup you have room for, in units per pass. Blank = no limit">Max length</label>
-     <input type="number" id="sb-maxlen" min="1" step="1" placeholder="no limit">
      <label for="sb-variants">Item states</label>
      <select id="sb-variants"><option value="all">Use every listed state</option><option value="safe">Skip Max / Maxed / Velvet / Top states</option></select>
     </div>
@@ -491,8 +560,8 @@ tbody tr:nth-child(odd) td{background:#333}
    </section>
   </div>
  </div>
- <p class="note"><b>How it builds:</b> cash needed = rebirth price × 1,000<sup>skips</sup>, and ore value = ore base value × furnace × resetter multipliers × setup multiplier (the MPU site's model). The builder only uses items you've marked as owned, never uses one item more times than you have copies, and tries every number of your resetters (strongest first). Each normal item counts once per pass (resetters + 1 passes), <i>Preline</i> states count once, and <i>N Resetters</i> states already include every pass so they're only used when exactly N resetters are used. It picks the best multiplier-per-length items first, then drops any item the target doesn't need, and shows the shortest setup that hits your skips. Resetter lengths aren't counted.</p>
- <p class="note"><b>Midas, Void Drive &amp; portables:</b> each blaster use has a death roll (Midas 1 in 3) that uses up a shield; with no shields left the ore dies. The builder gives your best owned blaster as many uses as keep survival at or above your target (MPU site default 60%, starting from 3 shields). Turtle Dignifier (+1) and Tortoise Fortifier (+3) add shields once per ore, so they're handled here instead of as normal items. Void Drive (×100) goes at the end and resets shields to 15, so more blaster uses fit after it, but the ore dies 3 seconds later. Total survival = survival before Void Drive × survival after it × the chance of surviving risky portables (Methuselah's Mask 1 in 12 per use, Deceptive Sorcery and Doom Mortar 1 in 20). Portables get their per-tag uses on every pass (resetters give a new tag), once-per-ore portables count once, only your best pulsar is used, Ion Field is 2.5× then 1.8× per tag, and ghosts run Future → Past → Present with each earlier ghost doubling the next. Portables take no line length. Many items have conditions (wet ore, Havium, Midas only, other items required); check the Conditions column before you build.</p>
+ <p class="note"><b>How it builds:</b> cash needed = rebirth price × 1,000<sup>skips</sup>, and ore value = ore base value × furnace × resetters × everything in your lines × blasters &amp; portables (the MPU site's model). Your setup is a row of <b>lines</b>: give each one a length in units and choose the resetter at its end (Auto uses the strongest resetters you've marked). The ore goes through Line 1, its resetter, Line 2, and so on, then into the furnace. An item only upgrades the ore once per reset cycle, so the same item twice before a resetter doesn't count (it's flagged), and each copy in a line needs a copy you own. Add items by hand with <b>+ Add item</b>, or press <b>⚡ Auto build</b> to fill the lines from the items you've marked as owned: it uses the best multiplier-per-unit items first, fits each one into the line with the least space left, drops anything the target doesn't need, and can keep your manual picks or rebuild every line. "N Resetters" states and entries that already count extra Midas uses aren't offered, because lines, shields and blasters are worked out here instead. Many items have conditions (wet ore, Havium, other items required): check each line's Conditions column.</p>
+ <p class="note"><b>Midas, Void Drive &amp; portables:</b> each blaster use has a death roll (Midas 1 in 3) that uses up a shield; with no shields left the ore dies. Your best owned blaster gets as many uses along your lines as keep survival at or above your target (MPU site default 60%, starting from 3 shields). Turtle Dignifier (+1) and Tortoise Fortifier (+3) add shields once per ore when they're in a line. With <b>Void Drive</b> on, a Void Drive line comes after your last line: Void Drive (×100) resets shields to 15, then very fast conveyors carry the ore past blasters along the sides and straight into the furnace before it dies 3 seconds later. The ore never loops back through resetters after Void Drive. Total survival = survival before Void Drive × survival after it × the chance of surviving risky portables (Methuselah's Mask 1 in 12 per use, Deceptive Sorcery and Doom Mortar 1 in 20). Portables get their per-tag uses once per reset cycle, once-per-ore portables count once, only your best pulsar is used, Ion Field is 2.5× then 1.8× per tag, and ghosts run Future → Past → Present with each earlier ghost doubling the next. Portables and blasters take no line length.</p>
 </div>
 </main>
 <div class="toast" id="toast" role="status" hidden></div>
@@ -1030,7 +1099,7 @@ $('tab-platforms').onclick=()=>showTab('platforms')
 
 /* ---------- setup builder ---------- */
 const SB_KEY='mpucalc.builder.v1'
-const sb={owned:{},resetters:{},blasters:{},portables:{},life:'',skips:20,ore:'',furnace:'',price:'',maxlen:'',variants:'all',target:'',shields:'',voidDrive:'off',mask:'off'}
+const sb={owned:{},resetters:{},blasters:{},portables:{},lines:[{len:'40',end:'auto',items:[]}],life:'',skips:20,ore:'',furnace:'',price:'',variants:'all',target:'',shields:'',voidDrive:'off',mask:'off'}
 let SB_COMPONENTS=new Map(),SB_RESETTERS=[],SB_BLASTERS=[],SB_PORTABLES=[],SB_PORT_GROUPS=[],SB_SPECIAL={}
 const compKey=c=>c.dbId!=null?'id:'+c.dbId:'name:'+String(c.name).toLowerCase()
 const portKey=p=>p.dbId!=null?'id:'+p.dbId:p.id
@@ -1085,44 +1154,6 @@ function entryKind(it){
  return {kind:'loop'}
 }
 const RISKY_STATE=/\b(Max|Maxed|Velvet Buffed|Top Max|Top)\b/i
-function sbCandidates(R){
- const P=R+1,out=[]
- for(const it of ITEMS){
-  if(!(it.multiplier>1)||!(it.length>0))continue
-  if(sb.variants==='safe'&&RISKY_STATE.test(it.variant||''))continue
-  const comps=(it.components||[]).map(compKey)
-  if(!comps.length||!comps.every(k=>(sb.owned[k]||0)>0))continue
-  // Midas, shields and Void Drive are modelled in the survival step, so their pre-credited entries are skipped here
-  if(comps.some(k=>SB_SPECIAL.excludeKeys.has(k))||/Midas/i.test(it.note||''))continue
-  const ek=entryKind(it),lg=L10(it.multiplier)
-  let g,L,place
-  if(ek.kind==='reset'){if(ek.k!==R)continue;g=lg;L=it.length/(R+1);place=`${R} resetter${R===1?'':'s'}, all passes`}
-  else if(ek.kind==='pre'){g=lg;L=it.length;place='Preline (once)'}
-  else{g=lg*P;L=it.length;place=P>1?`Loop ×${P} passes`:'Line'}
-  out.push({it,comps,g,L,lg,place})
- }
- return out
-}
-function sbGreedy(order,need,maxLen,reservedLen,copiesInit){
- const copies={...copiesInit}
- const picks=[];let total=0,len=0
- for(const c of order){
-  while(total<need){
-   const want={};for(const k of c.comps)want[k]=(want[k]||0)+1
-   if(!Object.entries(want).every(([k,n])=>(copies[k]||0)>=n))break
-   if(maxLen&&reservedLen+len+c.L>maxLen+1e-9)break
-   for(const k of c.comps)copies[k]--
-   picks.push(c);total+=c.g;len+=c.L
-  }
-  if(total>=need)break
- }
- if(Number.isFinite(need)&&total>=need){
-  const sorted=picks.slice().sort((a,b)=>b.L-a.L||a.g-b.g)
-  for(const c of sorted){if(total-c.g>=need-1e-12){picks.splice(picks.indexOf(c),1);total-=c.g;len-=c.L}}
- }
- return {picks,total,len}
-}
-
 /* survival maths: chance an ore survives n blaster uses with S shields (each death roll uses a shield) */
 const LNF=[0];function lnFact(n){for(let i=LNF.length;i<=n;i++)LNF[i]=LNF[i-1]+Math.log(i);return LNF[n]}
 function survive(n,S,p){
@@ -1180,50 +1211,6 @@ function portableGain(P){
  return {rows,risky,log:rows.reduce((a,r)=>a+r.log,0)}
 }
 function subsets(arr){const out=[[]];for(const x of arr)for(const s of out.slice())out.push([...s,x]);return out}
-function sbBuild(needTotal){
- const maxLen=Number(sb.maxlen)>0?Number(sb.maxlen):0
- const rs=SB_RESETTERS.filter(r=>sb.resetters[r.id])
- const T=Math.min(1,Math.max(0.01,(sb.target===''?((sbData('survival')||{}).threshold??0.6)*100:Number(sb.target))/100))
- const S0=sb.shields===''?3:Math.max(0,Math.floor(Number(sb.shields))||0)
- const blasters=SB_BLASTERS.filter(b=>sb.blasters[b.id])
- const useVoid=sb.voidDrive==='on'&&!!SB_SPECIAL.void
- const shieldItems=['turtle','tortoise'].filter(k=>SB_SPECIAL[k]&&(sb.owned[SB_SPECIAL[k].key]||0)>0)
- let best=null,maxOverall=-Infinity
- for(let R=0;R<=rs.length;R++){
-  const P=R+1,used=rs.slice(0,R),rLog=used.reduce((a,r)=>a+L10(r.multiplier),0)
-  const cands=sbCandidates(R)
-  const byRatio=cands.slice().sort((a,b)=>b.g/b.L-a.g/a.L||b.g-a.g),byGain=cands.slice().sort((a,b)=>b.g-a.g||a.L-b.L)
-  const port=portableGain(P)
-  for(const shieldSet of subsets(shieldItems))for(const riskySet of subsets(port.risky)){
-   const factor=riskySet.reduce((a,r)=>a*(1-r.pDie)**r.uses,1)
-   if(factor<T-1e-12)continue
-   const S=S0+shieldSet.reduce((a,k)=>a+SB_SPECIAL[k].shields,0)
-   // copies left after shield items / Void Drive take theirs
-   const copies={...sb.owned};for(const k of shieldSet)copies[SB_SPECIAL[k].key]--
-   let plan=null
-   for(const b of blasters){const pl=blasterPlan(b,S,T/factor,P,useVoid,SB_SPECIAL.void?.shields??15);if(pl&&(!plan||pl.log>plan.log))plan=pl}
-   const surv=(plan?plan.surv:1)*factor
-   const shieldLog=shieldSet.reduce((a,k)=>a+P*L10(SB_SPECIAL[k].mult),0),shieldLen=shieldSet.reduce((a,k)=>a+SB_SPECIAL[k].length,0)
-   const voidLog=useVoid?L10(SB_SPECIAL.void.mult):0,voidLen=useVoid?SB_SPECIAL.void.length:0
-   const fixedLog=rLog+port.log+riskySet.reduce((a,r)=>a+r.log,0)+(plan?plan.log:0)+shieldLog+voidLog
-   const fixedLen=shieldLen+voidLen
-   if(maxLen&&fixedLen>maxLen)continue
-   const need=needTotal-fixedLog
-   let res=null
-   for(const order of [byRatio,byGain]){
-    const r=need<=0?{picks:[],total:0,len:0}:sbGreedy(order,need,maxLen,fixedLen,copies)
-    r.met=r.total>=need-1e-12
-    if(!res||(r.met&&!res.met)||(r.met===res.met&&(r.met?r.len<res.len-1e-9:r.total>res.total)))res=r
-   }
-   const all=sbGreedy(byRatio,Infinity,maxLen,fixedLen,copies)
-   maxOverall=Math.max(maxOverall,fixedLog+all.total)
-   const cand={R,P,used,rLog,port,riskySet,shieldSet,plan,surv,T,S,useVoid,picks:res.picks,itemsLog:res.total,len:res.len+fixedLen,overall:fixedLog+res.total,met:res.met}
-   const better=!best||(cand.met&&!best.met)||(cand.met&&best.met&&(cand.len<best.len-1e-9||(Math.abs(cand.len-best.len)<1e-9&&(cand.R<best.R||(cand.R===best.R&&cand.surv>best.surv)))))||(!cand.met&&!best.met&&cand.overall>best.overall)
-   if(better)best=cand
-  }
- }
- return {chosen:best,maxOverall}
-}
 function sbBaseLog(){
  const d=sbDefaults()
  const oreIn=parseCash(sb.ore),oreLog=oreIn==null?d.oreLog:oreIn
@@ -1231,68 +1218,305 @@ function sbBaseLog(){
  return {oreLog,fur,ok:!Number.isNaN(oreIn)&&fur>0,log:oreLog+L10(fur>0?fur:1)}
 }
 const skipsFrom=(valueLog,priceLog)=>Math.floor((valueLog-priceLog)/3+1e-9)
+/* ---------- line-based setup: pool, evaluation, auto build ---------- */
+let POOL=[],POOL_BY_KEY=new Map()
+function buildPool(){
+ POOL=[]
+ for(const it of ITEMS){
+  if(!(it.multiplier>0)||!(it.length>0))continue
+  const ek=entryKind(it);if(ek.kind==='reset')continue
+  const comps=(it.components||[]).map(compKey);if(!comps.length)continue
+  if(comps.some(k=>SB_SPECIAL.excludeKeys.has(k))||/Midas/i.test(it.note||''))continue
+  POOL.push({key:it.id,it,comps,lg:L10(it.multiplier),L:it.length,pre:ek.kind==='pre',name:it.name,tier:it.tier,multiplier:it.multiplier,note:it.note||'',mpu:it.mpu,search:it.search})
+ }
+ for(const k of ['tortoise','turtle']){const s=SB_SPECIAL[k];if(!s)continue
+  POOL.push({key:'shield:'+k,special:k,comps:[s.key],lg:L10(s.mult),L:s.length,pre:false,name:s.comp.name,tier:s.comp.tier,multiplier:s.mult,note:`+${s.shields} shield${s.shields===1?'':'s'} once per ore (for Midas/blasters). Needs wet${k==='tortoise'?' Havium':''} ore`,mpu:s.mult**(1/s.length),search:(s.comp.name+' shield').toLowerCase(),comp:s.comp})}
+ POOL_BY_KEY=new Map(POOL.map(e=>[e.key,e]))
+}
+const lineCap=l=>Math.max(0,Number(l.len)||0)
+function resolveEnds(lines){
+ const explicit=new Set(lines.map(l=>l.end).filter(e=>e!=='auto'&&e!=='none'))
+ const avail=SB_RESETTERS.filter(r=>sb.resetters[r.id]&&!explicit.has(r.id))
+ return lines.map(l=>l.end==='none'?null:l.end==='auto'?(avail.shift()||null):(SB_RESETTERS.find(r=>r.id===l.end)||null))
+}
+function sbSurvivalSettings(){
+ return {T:Math.min(1,Math.max(0.01,(sb.target===''?((sbData('survival')||{}).threshold??0.6)*100:Number(sb.target))/100)),
+  S0:sb.shields===''?3:Math.max(0,Math.floor(Number(sb.shields))||0),useVoid:sb.voidDrive==='on'&&!!SB_SPECIAL.void}
+}
+function evalLayout(lines,ends){
+ const {T,S0,useVoid}=sbSurvivalSettings()
+ const cycleOf=[];let cyc=0;lines.forEach((l,i)=>{cycleOf[i]=cyc;if(ends[i])cyc++})
+ const cycSets=[],preUsed=new Set(),compUse={},specialsUsed=new Set()
+ let itemsLog=0
+ const lineInfo=lines.map((l,i)=>{
+  const set=cycSets[cycleOf[i]]??=new Set()
+  let used=0,log=0
+  const rows=l.items.map((key,ii)=>{
+   const e=POOL_BY_KEY.get(key)
+   if(!e)return {key,ii,missing:true,warn:'Item not found in the current data',counts:false}
+   used+=e.L
+   for(const k of e.comps)compUse[k]=(compUse[k]||0)+1
+   let warn='',counts=true
+   if(e.comps.some(k=>set.has(k))){warn='Already upgraded the ore in this reset cycle, so it won\'t upgrade again (put a resetter between them)';counts=false}
+   else if(e.pre&&preUsed.has(e.key)){warn='This state only counts once per ore';counts=false}
+   if(counts){for(const k of e.comps)set.add(k);if(e.pre)preUsed.add(e.key);log+=e.lg;if(e.special)specialsUsed.add(e.special)}
+   return {key,ii,e,counts,warn}
+  })
+  itemsLog+=log
+  return {i,cap:lineCap(l),used,log,rows,over:used>lineCap(l)+1e-9,cycle:cycleOf[i],end:ends[i]}
+ })
+ const S=S0+[...specialsUsed].reduce((a,k)=>a+SB_SPECIAL[k].shields,0)
+ const usedEnds=ends.filter(Boolean),R=usedEnds.length,cycles=R+1
+ const rLog=usedEnds.reduce((a,r)=>a+L10(r.multiplier),0)
+ const port=portableGain(cycles)
+ const blasters=SB_BLASTERS.filter(b=>sb.blasters[b.id])
+ let best={riskySet:[],plan:null,extra:0,surv:1}
+ for(const riskySet of subsets(port.risky)){
+  const factor=riskySet.reduce((a,r)=>a*(1-r.pDie)**r.uses,1);if(factor<T-1e-12)continue
+  let plan=null
+  for(const b of blasters){const pl=blasterPlan(b,S,T/factor,cycles,useVoid,SB_SPECIAL.void?.shields??15);if(pl&&(!plan||pl.log>plan.log))plan=pl}
+  const extra=riskySet.reduce((a,r)=>a+r.log,0)+(plan?plan.log:0),surv=(plan?plan.surv:1)*factor
+  if(extra>best.extra+1e-12||(Math.abs(extra-best.extra)<1e-12&&surv>best.surv))best={riskySet,plan,extra,surv}
+ }
+ const voidLog=useVoid?L10(SB_SPECIAL.void.mult):0
+ const used=lineInfo.reduce((a,l)=>a+l.used,0),cap=lineInfo.reduce((a,l)=>a+l.cap,0)
+ return {lineInfo,itemsLog,S,R,cycles,rLog,usedEnds,port,...best,voidLog,useVoid,T,used,cap,compUse,overall:itemsLog+rLog+port.log+best.extra+voidLog}
+}
+function sbNeed(){
+ const base=sbBaseLog(),life=parseInt(sb.life),priceIn=parseCash(sb.price)
+ const priceLog=Number.isNaN(priceIn)?null:priceIn!=null?priceIn:life>=1?estimatePriceLog10(life):null
+ return {base,priceLog,cashLog:priceLog==null?null:priceLog+3*sb.skips,needTotal:priceLog==null?null:priceLog+3*sb.skips-base.log}
+}
+function autoBuild(){
+ const {needTotal,base}=sbNeed()
+ if(needTotal==null||!base.ok){toast('Enter your life (or a rebirth price) first');return}
+ if(!sb.lines.some(l=>lineCap(l)>0)){toast('Give at least one line a length first');return}
+ const before=JSON.parse(JSON.stringify(sb.lines))
+ const mode=$('sb-auto-mode').value
+ const lines=sb.lines.map(l=>({...l,items:mode==='rebuild'?[]:l.items.slice()}))
+ const ends=resolveEnds(lines)
+ const keptUse={};for(const l of lines)for(const k of l.items){const e=POOL_BY_KEY.get(k);if(e)for(const c of e.comps)keptUse[c]=(keptUse[c]||0)+1}
+ const copies0={};for(const [k,n] of Object.entries(sb.owned))copies0[k]=n-(keptUse[k]||0)
+ const ownedOK=e=>e.comps.every(k=>(sb.owned[k]||0)>0)
+ const cands=POOL.filter(e=>!e.special&&ownedOK(e)&&e.lg>0&&!(sb.variants==='safe'&&RISKY_STATE.test(e.it.variant||'')))
+ const byRatio=cands.slice().sort((a,b)=>b.lg/b.L-a.lg/a.L||b.lg-a.lg),byGain=cands.slice().sort((a,b)=>b.lg-a.lg||a.L-b.L)
+ const shieldOpts=['turtle','tortoise'].filter(k=>SB_SPECIAL[k]&&ownedOK(POOL_BY_KEY.get('shield:'+k))&&!lines.some(l=>l.items.includes('shield:'+k)))
+ let best=null
+ for(const shieldSet of subsets(shieldOpts)){
+  const layout=lines.map(l=>({...l,items:l.items.slice()}))
+  const copies={...copies0}
+  let ok=true
+  for(const k of shieldSet){const e=POOL_BY_KEY.get('shield:'+k);const r=placeOne(layout,ends,e,copies);if(!r){ok=false;break}}
+  if(!ok)continue
+  const fixed=evalLayout(layout,ends).overall,need=needTotal-fixed
+  for(const order of [byRatio,byGain]){
+   const res=greedyFill(layout,ends,order,need,copies)
+   const met=res.total>=need-1e-12
+   const cand={layout:res.layout,met,total:fixed+res.total,added:res.len+shieldSet.reduce((a,k)=>a+SB_SPECIAL[k].length,0)}
+   if(!best||(cand.met&&!best.met)||(cand.met&&best.met&&cand.added<best.added-1e-9)||(!cand.met&&!best.met&&cand.total>best.total))best=cand
+  }
+ }
+ if(!best){toast('Nothing you own fits in these lines');return}
+ sb.lines=best.layout.map(l=>({len:l.len,end:l.end,items:l.items}))
+ renderBuilder()
+ const n=sb.lines.reduce((a,l)=>a+l.items.length,0)-before.reduce((a,l)=>a+(mode==='rebuild'?0:l.items.length),0)
+ toast(best.met?`Auto build placed ${n} item${n===1?'':'s'} and reaches your target`:`Auto build placed ${n} item${n===1?'':'s'}; your owned items can't reach the target in these lines`,'Undo',()=>{sb.lines=before;renderBuilder()})
+}
+function lineState(layout,ends){
+ const cycleOf=[];let c=0;layout.forEach((l,i)=>{cycleOf[i]=c;if(ends[i])c++})
+ const sets=[],free=[],pre=new Set()
+ layout.forEach((l,i)=>{const s=sets[cycleOf[i]]??=new Set();let used=0;for(const k of l.items){const e=POOL_BY_KEY.get(k);if(!e)continue;used+=e.L;for(const x of e.comps)s.add(x);if(e.pre)pre.add(e.key)}free[i]=lineCap(l)-used})
+ return {cycleOf,sets,free,pre}
+}
+function canPlace(st,i,e,copies){
+ if(st.free[i]<e.L-1e-9)return false
+ if(e.comps.some(k=>st.sets[st.cycleOf[i]].has(k)))return false
+ if(e.pre&&st.pre.has(e.key))return false
+ const want={};for(const k of e.comps)want[k]=(want[k]||0)+1
+ return Object.entries(want).every(([k,n])=>(copies[k]||0)>=n)
+}
+function doPlace(layout,st,i,e,copies){layout[i].items.push(e.key);st.free[i]-=e.L;for(const k of e.comps){st.sets[st.cycleOf[i]].add(k);copies[k]--}if(e.pre)st.pre.add(e.key)}
+function placeOne(layout,ends,e,copies){
+ const st=lineState(layout,ends)
+ let bi=-1;for(let i=0;i<layout.length;i++)if(canPlace(st,i,e,copies)&&(bi<0||st.free[i]<st.free[bi]))bi=i
+ if(bi<0)return false
+ doPlace(layout,st,bi,e,copies);return true
+}
+function greedyFill(layout0,ends,order,need,copies0){
+ const layout=layout0.map(l=>({...l,items:l.items.slice()})),copies={...copies0}
+ const st=lineState(layout,ends),picks=[]
+ let total=0,len=0
+ if(need>0)for(const e of order){
+  while(total<need){
+   let bi=-1;for(let i=0;i<layout.length;i++)if(canPlace(st,i,e,copies)&&(bi<0||st.free[i]<st.free[bi]))bi=i
+   if(bi<0)break
+   doPlace(layout,st,bi,e,copies);picks.push({i:bi,e});total+=e.lg;len+=e.L
+  }
+  if(total>=need)break
+ }
+ if(total>=need&&need>0){
+  for(const p of picks.slice().sort((a,b)=>b.e.L-a.e.L||a.e.lg-b.e.lg)){
+   if(total-p.e.lg>=need-1e-12){const items=layout[p.i].items,idx=items.lastIndexOf(p.e.key);if(idx>=0)items.splice(idx,1);total-=p.e.lg;len-=p.e.L}
+  }
+ }
+ return {layout,total,len}
+}
+
+/* ---------- rendering ---------- */
 const pct=v=>(v*100).toLocaleString('en-US',{maximumFractionDigits:2})+'%'
+function endOptions(l,resolved){
+ const owned=r=>sb.resetters[r.id]
+ let h=`<option value="auto"${l.end==='auto'?' selected':''}>Auto: ${resolved&&l.end==='auto'?esc(resolved.name):'best resetter I have'}</option><option value="none"${l.end==='none'?' selected':''}>No resetter</option>`
+ h+=SB_RESETTERS.map(r=>`<option value="${esc(r.id)}"${l.end===r.id?' selected':''}>${esc(r.name)} ×${esc(numberText(r.multiplier))}${owned(r)?'':' (not marked owned)'}</option>`).join('')
+ return h
+}
+function renderLines(ev){
+ const useVoid=ev.useVoid
+ $('sb-lines').innerHTML=ev.lineInfo.map((li,i)=>{
+  const l=sb.lines[i],pctUsed=li.cap?Math.min(100,li.used/li.cap*100):(li.used?100:0)
+  const next=i<sb.lines.length-1?`Line ${i+2}`:useVoid?'the Void Drive line':'the furnace'
+  const endTxt=li.end?`${esc(li.end.name)} (×${esc(numberText(li.end.multiplier))}) resets the ore, then it goes to ${next}`:`No resetter: the ore goes straight to ${next}${i<sb.lines.length-1?' in the same reset cycle':''}`
+  const rows=li.rows.length?li.rows.map(r=>{
+   if(r.missing)return `<tr class="warn"><td colspan="4">${esc(r.key)}</td><td class="cond">${esc(r.warn)}</td><td><button type="button" class="rm" data-act="rm" data-li="${i}" data-ii="${r.ii}" aria-label="Remove">✕</button></td></tr>`
+   const e=r.e,cell=e.special?componentLine(e.comp,e.name):itemCell(e.it)
+   const owned=e.comps.every(k=>(sb.owned[k]||0)>0),over=e.comps.some(k=>(ev.compUse[k]||0)>(sb.owned[k]||0)&&(sb.owned[k]||0)>0)
+   const extra=r.warn||(!owned?'Not marked as owned':over?'Uses more copies than you marked as owned':'')
+   return `<tr class="${r.warn?'warn':''}"><td class="item">${cell}</td><td class="numeric">×${esc(numberText(e.multiplier))}</td><td class="numeric">${r.counts?mpuSpan(e.mpu):'–'}</td><td class="numeric">${esc(numberText(e.L))}</td><td class="cond">${extra?`<b style="color:${r.warn?'#ff9a9a':'#fdcb58'}">${esc(extra)}</b>${e.note?'<br>':''}`:''}${esc(e.note)}</td><td><button type="button" class="rm" data-act="rm" data-li="${i}" data-ii="${r.ii}" aria-label="Remove ${esc(e.name)}">✕</button></td></tr>`}).join(''):''
+  return `<div class="line-card${li.over?' over':''}" data-line="${i}">
+   <div class="line-head">
+    <span class="lname">Line ${i+1}</span>
+    <label>Length <input type="number" min="0" step="any" value="${esc(l.len)}" data-act="len" data-li="${i}" aria-label="Line ${i+1} length in units"> units</label>
+    <span class="cap"><span class="cap-bar"><span style="width:${pctUsed}%"></span></span>${esc(numberText(li.used,2))} / ${esc(numberText(li.cap,2))} used</span>
+    <span class="lmult" title="${esc(exactFromLog10(li.log))}">×${esc(fromLog10(li.log))}</span>
+    <span class="spacer"></span>
+    <label>Ends with <select data-act="end" data-li="${i}" aria-label="Line ${i+1} resetter">${endOptions(l,li.end)}</select></label>
+    <button type="button" data-act="add" data-li="${i}">+ Add item</button>
+    ${sb.lines.length>1?`<button type="button" class="rm" data-act="rmline" data-li="${i}" aria-label="Remove line ${i+1}" title="Remove this line">✕</button>`:''}
+   </div>
+   ${rows?`<div class="breakdown-wrap"><table class="breakdown line-items"><thead><tr><th>Item</th><th class="numeric">Multiplier</th><th class="numeric">MPU</th><th class="numeric">Length</th><th>Conditions</th><th></th></tr></thead><tbody>${rows}</tbody></table></div>`:`<div class="line-empty">Empty. Use <b>+ Add item</b> or <b>⚡ Auto build</b>.</div>`}
+   <div class="line-foot">${endTxt}${li.over?` · <b style="color:#ff8a8a">${esc(numberText(li.used-li.cap,2))} units over the line length</b>`:''}</div>
+  </div>`}).join('')
+ // Void Drive line
+ if(useVoid){
+  const v=SB_SPECIAL.void,pl=ev.plan
+  $('sb-void-line').innerHTML=`<div class="line-card void"><div class="line-head"><span class="lname">Void Drive line</span><span style="color:var(--muted)">after Line ${sb.lines.length}, no resetters after this</span><span class="spacer"></span><span class="lmult">×${esc(fromLog10(ev.voidLog+(pl?pl.m*L10(pl.b.multiplier):0)))}</span></div>
+   <div class="breakdown-wrap"><table class="breakdown line-items"><tbody>
+    <tr><td class="item">${componentLine(v.comp,v.comp.name)}</td><td class="numeric">×${esc(numberText(v.mult))}</td><td class="numeric">${esc(numberText(v.length))}</td><td class="cond">Sets the ore to ${v.shields} shields. ${esc(v.item?.note||'')}</td></tr>
+    ${pl&&pl.m?`<tr><td class="item">${componentLine({name:pl.b.name,tier:SB_PORTABLES_TIER(pl.b),imageUrl:SB_BLASTER_IMG(pl.b),dbId:pl.b.id},pl.b.name)}</td><td class="numeric">×${esc(numberText(pl.b.multiplier))} × ${pl.m}</td><td class="numeric">sides</td><td class="cond">${pl.m} blaster uses after Void Drive, on very fast conveyors so they all happen before the ore dies (3 s), then straight into the furnace</td></tr>`:`<tr><td colspan="4" class="cond" style="color:var(--muted)">Mark a blaster (e.g. Midas) as owned to use the 15 shields after Void Drive.</td></tr>`}
+   </tbody></table></div>
+   <div class="line-foot">Void Drive → very fast conveyors → blasters along the sides → furnace. The ore never goes back through resetters after Void Drive.</div></div>`
+ }else $('sb-void-line').innerHTML=''
+}
+function renderCarried(ev){
+ const row=(uses,item,how,mult,counts,cond,cls='')=>`<tr${cls?` class="${cls}"`:''}><td class="center">${uses}</td><td class="item">${item}</td><td class="place">${esc(how)}</td><td class="numeric">${mult}</td><td class="numeric">${counts}</td><td class="cond">${esc(cond||'')}</td></tr>`
+ const x=v=>'×'+esc(numberText(v)),xl=l=>`<span title="${esc(exactFromLog10(l))}">×${esc(fromLog10(l))}</span>`
+ let html=''
+ if(ev.plan){const pl=ev.plan,bc={name:pl.b.name,tier:SB_PORTABLES_TIER(pl.b),imageUrl:SB_BLASTER_IMG(pl.b),dbId:pl.b.id}
+  html+=row(pl.n+pl.m,componentLine(bc,pl.b.name),`${pl.n} use${pl.n===1?'':'s'} along your lines (${pl.S} shields)${ev.useVoid?` + ${pl.m} after Void Drive (${SB_SPECIAL.void.shields} shields)`:''}`,x(pl.b.multiplier),xl(pl.log),`${pct(pl.b.probability)} death roll per use; each roll uses a shield`,'portable-row')}
+ const merged=[];for(const r of [...ev.port.rows,...ev.riskySet]){const prev=merged.find(m=>/ Upgrade \d+$/.test(r.p.name)&&portKey(m.p)===portKey(r.p));if(prev){prev.parts++;prev.uses+=r.uses;prev.log+=r.log}else merged.push({...r,parts:1})}
+ for(const r of merged){const name=r.parts>1?r.p.name.replace(/ Upgrade \d+$/,'')+` (${r.parts} upgrades)`:r.p.name,place=r.parts>1?`Portable, ${r.uses} uses (${r.uses/r.parts} per upgrade)`:r.place
+  html+=row(r.uses,componentLine(r.p,name),place,r.parts>1?'×'+esc(numberText(10**(r.log/r.uses))):x(r.mult||r.p.multiplier),xl(r.log),r.p.notes,'portable-row')}
+ $('sb-body').innerHTML=html
+ $('sb-carried-wrap').hidden=!html
+}
 function renderBuilder(){
+ // remember focus inside the lines so typing a length doesn't lose the cursor
+ const ae=document.activeElement,focusSel=ae&&$('sb-lines').contains(ae)&&ae.dataset.act?`[data-act="${ae.dataset.act}"][data-li="${ae.dataset.li}"]`:null,caret=focusSel&&ae.selectionStart!=null?[ae.selectionStart,ae.selectionEnd]:null
  const d=sbDefaults()
  $('sb-ore').placeholder=fmtCash(d.oreLog)+' (Havium min)';$('sb-furnace').placeholder=numberText(d.furnace)+' (DoN)'
- const base=sbBaseLog(),oreIn=parseCash(sb.ore)
+ const oreIn=parseCash(sb.ore)
  $('sb-ore').classList.toggle('bad',Number.isNaN(oreIn));$('sb-ore-msg').textContent=Number.isNaN(oreIn)?'Use e.g. 20 sx, 2e22':oreIn!=null?'= '+fmtCash(oreIn):''
  $('sb-ore-msg').classList.toggle('bad',Number.isNaN(oreIn))
- const life=parseInt(sb.life),skips=sb.skips,priceIn=parseCash(sb.price)
+ const priceIn=parseCash(sb.price),life=parseInt(sb.life)
  $('sb-price').classList.toggle('bad',Number.isNaN(priceIn));$('sb-price-msg').classList.toggle('bad',Number.isNaN(priceIn))
- let priceLog=null
+ const {base,priceLog,cashLog,needTotal}=sbNeed()
  if(Number.isNaN(priceIn))$('sb-price-msg').textContent='Use e.g. 10 NVSPTGNTL, 25qn, 1e241'
- else if(priceIn!=null){priceLog=priceIn;$('sb-price-msg').textContent='= '+fmtCash(priceIn)}
- else if(life>=1){priceLog=estimatePriceLog10(life);$('sb-price-msg').textContent=(priceLog>=PRICE_CAP_LOG10?'capped price ':'estimated ')+fmtCash(priceLog)}
+ else if(priceIn!=null)$('sb-price-msg').textContent='= '+fmtCash(priceIn)
+ else if(life>=1)$('sb-price-msg').textContent=(priceLog>=PRICE_CAP_LOG10?'capped price ':'estimated ')+fmtCash(priceLog)
  else $('sb-price-msg').textContent='Blank = estimated from your life'
- // shield / void info line
- const sh=[];for(const k of ['turtle','tortoise'])if(SB_SPECIAL[k])sh.push(`${SB_SPECIAL[k].comp.name}: ${(sb.owned[SB_SPECIAL[k].key]||0)>0?'owned':'not owned'} (+${SB_SPECIAL[k].shields} shield${SB_SPECIAL[k].shields===1?'':'s'})`)
+ const sh=[];for(const k of ['turtle','tortoise'])if(SB_SPECIAL[k])sh.push(`${SB_SPECIAL[k].comp.name} gives +${SB_SPECIAL[k].shields} shield${SB_SPECIAL[k].shields===1?'':'s'} when it's in a line`)
  if(sb.voidDrive==='on'&&SB_SPECIAL.void&&!((sb.owned[SB_SPECIAL.void.key]||0)>0))sh.push('Void Drive: assumed owned')
- $('sb-shield-msg').textContent=sh.join(' · ')+(sh.length?'. Mark shield items in Your Items.':'')
+ $('sb-shield-msg').textContent=sh.join(' · ')
  const ownedCount=Object.values(sb.owned).filter(v=>v>0).length
  $('sb-own-count').textContent=`${ownedCount} of ${SB_COMPONENTS.size} items owned`
  $('sb-port-count').textContent=`${SB_PORT_GROUPS.filter(g=>sb.portables[g.key]).length} of ${SB_PORT_GROUPS.length} owned`
- const status=$('sb-status'),setStatus=(cls,html)=>{status.className='sb-status '+cls;status.innerHTML=html}
- const clearOut=()=>{for(const k of ['cash','need','gives','reached'])$('sb-'+k).textContent='–';$('sb-body').innerHTML='';$('sb-foot').innerHTML='';$('sb-reached').style.color=''}
  storage.set(SB_KEY,sb)
- if(priceLog==null){clearOut();setStatus('info','Enter your <b>life</b> (or a rebirth price under Options) and pick your target skips.');return}
- if(!base.ok){clearOut();setStatus('bad','Fix the ore base value / furnace multiplier under Options.');return}
- const cashLog=priceLog+3*skips,needTotal=cashLog-base.log
+ renderSbSelSummary()
+ const ends=resolveEnds(sb.lines),ev=evalLayout(sb.lines,ends)
+ renderLines(ev);renderCarried(ev)
+ if(focusSel){const el=$('sb-lines').querySelector(focusSel);if(el){el.focus();if(caret)try{el.setSelectionRange(...caret)}catch{}}}
+ if(!lpLine.closed){refreshPicker();positionPicker()}
+ const status=$('sb-status'),setStatus=(cls,html)=>{status.className='sb-status '+cls;status.innerHTML=html}
+ const gives=ev.overall
+ $('sb-gives').textContent='×'+fromLog10(gives);$('sb-gives').title=exactFromLog10(gives)
+ const placed=sb.lines.reduce((a,l)=>a+l.items.length,0)
+ $('sb-foot').innerHTML=`<tr><td>Total: ${placed} item${placed===1?'':'s'} in ${sb.lines.length} line${sb.lines.length===1?'':'s'}${ev.useVoid?' + Void Drive line':''}</td><td>${esc(numberText(ev.used,2))} / ${esc(numberText(ev.cap,2))} units used</td><td>${ev.R} resetter${ev.R===1?'':'s'} · ${ev.cycles} reset cycle${ev.cycles===1?'':'s'}</td><td>${ev.plan||ev.riskySet.length?'survival ≈ '+pct(ev.surv):''}</td><td class="numeric">×${esc(fromLog10(gives))}</td></tr>`
+ if(priceLog==null||!base.ok){for(const k of ['cash','need','reached'])$('sb-'+k).textContent='–';$('sb-reached').style.color='';setStatus('info',!base.ok?'Fix the ore base value / furnace multiplier under Options.':'Enter your <b>life</b> (or a rebirth price under Options) and pick your target skips.');return}
  $('sb-cash').textContent=fmtCash(cashLog);$('sb-cash').title=cashTitle(cashLog)
  $('sb-need').textContent=needTotal<=0?'×1 (none)':'×'+fromLog10(needTotal);$('sb-need').title=exactFromLog10(needTotal)
- const anything=ownedCount||Object.keys(sb.portables).length||Object.keys(sb.blasters).length||Object.keys(sb.resetters).length||sb.voidDrive==='on'
- if(!anything&&needTotal>0){clearOut();$('sb-cash').textContent=fmtCash(cashLog);$('sb-need').textContent='×'+fromLog10(needTotal);setStatus('info','Mark what you have in <b>Your Items</b>, <b>Midas &amp; Blasters</b>, <b>Portables</b> and <b>Resetters</b>, and the builder will make a setup.');return}
- const {chosen:c,maxOverall}=sbBuild(needTotal)
- if(!c){clearOut();setStatus('bad','No setup fits. Check Max length and the survival target.');return}
- const gives=c.overall,valueLog=base.log+gives,reached=Math.min(20,skipsFrom(valueLog,priceLog)),maxSkips=Math.min(20,skipsFrom(base.log+maxOverall,priceLog))
- $('sb-gives').textContent='×'+fromLog10(gives);$('sb-gives').title=exactFromLog10(gives)
- $('sb-reached').textContent=reached<0?'can\'t rebirth':reached;$('sb-reached').style.color=reached>=skips?'#5cbe5c':'#ff7a7a'
- const ore=`ore worth ${esc(fmtCash(valueLog))}`
- const survTxt=c.plan||c.riskySet.length?` Ore survival ≈ <b>${pct(c.surv)}</b> (target ${pct(c.T)}).`:''
- const nItems=c.picks.length+c.shieldSet.length+(c.useVoid?1:0)
- if(c.met)setStatus('ok',`✓ This setup reaches <b>${reached} skip${reached===1?'':'s'}</b> (${ore}). ${nItems} item${nItems===1?'':'s'}${c.R?` + ${c.R} resetter${c.R===1?'':'s'}`:''}, ${esc(numberText(c.len,2))} length per pass.${survTxt}${maxSkips>reached?` With everything you own you could reach ${maxSkips} skips.`:''}`)
- else setStatus('bad',`✗ Not enough to reach ${skips} skip${skips===1?'':'s'}. The best setup from what you have ${reached<0?'<b>can\'t afford a rebirth yet</b>':'reaches <b>'+reached+' skip'+(reached===1?'':'s')+'</b>'} (${ore}); it needs ×${esc(fromLog10(needTotal-gives))} more.${survTxt}${sb.maxlen?' Raising Max length may help.':''} Mark more items, portables or resetters, or lower the target.`)
- const row=(qty,item,place,mult,counts,len,cond,cls='')=>`<tr${cls?` class="${cls}"`:''}><td class="center">${qty}</td><td class="item">${item}</td><td class="place">${esc(place)}</td><td class="numeric">${mult}</td><td class="numeric">${counts}</td><td class="numeric">${len}</td><td class="cond">${esc(cond||'')}</td></tr>`
- const x=v=>'×'+esc(numberText(v)),xl=l=>`<span title="${esc(exactFromLog10(l))}">×${esc(fromLog10(l))}</span>`
- let html=''
- for(const k of c.shieldSet){const s=SB_SPECIAL[k];html+=row(1,componentLine(s.comp,s.comp.name),`${c.P>1?`Loop ×${c.P} passes`:'Line'} · +${s.shields} shield${s.shields===1?'':'s'} once`,x(s.mult),xl(c.P*L10(s.mult)),esc(numberText(s.length)),k==='tortoise'?'Needs wet Havium ore; the 3 shields are given once per ore':'Needs wet ore; the shield is given once per ore')}
- const grouped=new Map()
- for(const p of c.picks){const k=p.it.id;if(!grouped.has(k))grouped.set(k,{p,n:0});grouped.get(k).n++}
- const order={pre:0,loop:1,reset:1}
- for(const {p,n} of [...grouped.values()].sort((a,b)=>order[entryKind(a.p.it).kind]-order[entryKind(b.p.it).kind]||b.p.g/b.p.L-a.p.g/a.p.L))
-  html+=row(n,itemCell(p.it),p.place,x(p.it.multiplier),xl(p.g*n),esc(numberText(p.L*n,2)),p.it.note)
- if(c.useVoid){const v=SB_SPECIAL.void;html+=row(1,componentLine(v.comp,v.comp.name),`End of line, once · sets ${v.shields} shields`,x(v.mult),x(v.mult),esc(numberText(v.length)),v.item?.note||'Ore dies 3 seconds after Void Drive')}
- if(c.plan){const pl=c.plan,u=pl.n+pl.m,bc={name:pl.b.name,tier:SB_PORTABLES_TIER(pl.b),imageUrl:SB_BLASTER_IMG(pl.b),dbId:pl.b.id}
-  html+=row(u,componentLine(bc,pl.b.name),`Portable blaster: ${pl.n} use${pl.n===1?'':'s'} (${pl.S} shields)${c.useVoid?` + ${pl.m} after Void Drive (${SB_SPECIAL.void.shields} shields)`:''}`,x(pl.b.multiplier),xl(pl.log),'–',`${pct(pl.b.probability)} death roll per use, each roll uses a shield${c.useVoid?'; post–Void Drive uses must finish within 3 seconds':''}`,'portable-row')}
- const merged=[];for(const r of [...c.port.rows,...c.riskySet]){const prev=merged.find(m=>/ Upgrade \d+$/.test(r.p.name)&&portKey(m.p)===portKey(r.p));if(prev){prev.parts++;prev.uses+=r.uses;prev.log+=r.log}else merged.push({...r,parts:1})}
- for(const r of merged){const name=r.parts>1?r.p.name.replace(/ Upgrade \d+$/,'')+` (${r.parts} upgrades)`:r.p.name,place=r.parts>1?`Portable, ${r.uses} uses (${r.uses/r.parts} per upgrade)`:r.place
-  html+=row(r.uses,componentLine(r.p,name),place,r.parts>1?'×'+esc(numberText(10**(r.log/r.uses))):x(r.mult||r.p.multiplier),xl(r.log),'–',r.p.notes,'portable-row')}
- html+=c.used.map(r=>row(1,componentLine(r,r.name),'Resetter (end of pass)',x(r.multiplier),x(r.multiplier),'–',r.notes,'resetter-row')).join('')
- $('sb-body').innerHTML=html||`<tr class="empty-row"><td colspan="7">${c.met?'Nothing needed: your ore base value and furnace already reach this target.':'Nothing you own fits. Mark more items.'}</td></tr>`
- const itemLen=c.len,itemLog=c.itemsLog+c.shieldSet.reduce((a,k)=>a+c.P*L10(SB_SPECIAL[k].mult),0)
- const mpu=itemLen>0?10**((itemLog/c.P)/itemLen):null
- $('sb-foot').innerHTML=html?`<tr><td></td><td>Total${c.R?` (${c.P} passes)`:''}</td><td style="font-weight:400;color:var(--muted)">${c.plan||c.riskySet.length?'survival ≈ '+pct(c.surv):''}</td><td></td><td class="numeric">×${esc(fromLog10(gives))}</td><td class="numeric">${esc(numberText(itemLen,2))}</td><td style="font-weight:400;color:var(--muted)">${mpu?`≈ ${esc(numberText(mpu))} MPU per pass (placed items only)`:''}</td></tr>`:''
+ const valueLog=base.log+gives,reached=Math.min(20,skipsFrom(valueLog,priceLog))
+ $('sb-reached').textContent=reached<0?'can\'t rebirth':reached;$('sb-reached').style.color=reached>=sb.skips?'#5cbe5c':'#ff7a7a'
+ const ore=`ore worth ${esc(fmtCash(valueLog))}`,survTxt=ev.plan||ev.riskySet.length?` Ore survival ≈ <b>${pct(ev.surv)}</b> (target ${pct(ev.T)}).`:''
+ const overLines=ev.lineInfo.filter(l=>l.over).length,dupes=ev.lineInfo.reduce((a,l)=>a+l.rows.filter(r=>r.warn).length,0)
+ const warn=(overLines?` <b style="color:#ff8a8a">${overLines} line${overLines===1?' is':'s are'} over length.</b>`:'')+(dupes?` <b style="color:#ff8a8a">${dupes} item${dupes===1?' doesn\'t':'s don\'t'} count (see the line${dupes===1?'':'s'}).</b>`:'')
+ if(gives>=needTotal-1e-12)setStatus(overLines?'bad':'ok',`${overLines?'⚠':'✓'} This setup reaches <b>${reached} skip${reached===1?'':'s'}</b> (${ore}).${survTxt}${warn}`)
+ else{
+  const hint=!placed?' Add items to your lines or press <b>⚡ Auto build</b>.':ev.used<ev.cap-0.5?' There\'s free space: try <b>⚡ Auto build</b>.':' Make the lines longer, add a line, or mark more items, portables or resetters.'
+  setStatus('bad',`✗ Not enough for ${sb.skips} skip${sb.skips===1?'':'s'}: this setup ${reached<0?'<b>can\'t afford a rebirth yet</b>':'reaches <b>'+reached+' skip'+(reached===1?'':'s')+'</b>'} (${ore}) and needs ×${esc(fromLog10(needTotal-gives))} more.${survTxt}${warn}${hint}`)
+ }
 }
+
+/* ---------- item picker for a line ---------- */
+const lpLine={i:0,closed:true}
+function positionPicker(){
+ if(lpLine.closed)return
+ const panel=$('lp-panel'),host=panel.parentElement,anchor=$('sb-lines').querySelector(`[data-act="add"][data-li="${lpLine.i}"]`)
+ if(!anchor){closePicker();return}
+ const hr=host.getBoundingClientRect(),ar=anchor.getBoundingClientRect(),w=Math.min(620,window.innerWidth-30)
+ panel.style.width=w+'px'
+ panel.style.top=(ar.bottom-hr.top+4)+'px'
+ panel.style.left=Math.max(0,Math.min(ar.right-hr.left-w,hr.width-w))+'px';panel.style.right='auto'
+}
+function openPicker(i){
+ lpLine.i=i;lpLine.closed=false
+ $('lp-panel').hidden=false
+ if(!Object.values(sb.owned).some(v=>v>0))$('lp-owned').checked=false
+ positionPicker();refreshPicker();$('lp-search').focus()
+}
+function closePicker(){if(lpLine.closed)return;lpLine.closed=true;$('lp-panel').hidden=true}
+let lpShown=[]
+function refreshPicker(){
+ const i=lpLine.i;if(!sb.lines[i]){closePicker();return}
+ const q=$('lp-search').value.trim().toLowerCase().split(/\s+/).filter(Boolean),onlyOwned=$('lp-owned').checked
+ const ends=resolveEnds(sb.lines),st=lineState(sb.lines,ends),free=st.free[i],cycSet=st.sets[st.cycleOf[i]]
+ lpShown=POOL.filter(e=>(!onlyOwned||e.comps.every(k=>(sb.owned[k]||0)>0))&&q.every(w=>e.search.includes(w))).sort((a,b)=>(b.mpu||0)-(a.mpu||0))
+ $('lp-info').textContent=`Line ${i+1}: ${numberText(lineCap(sb.lines[i])-free,2)} / ${numberText(lineCap(sb.lines[i]),2)} used`
+ $('lp-count').textContent=`${lpShown.length} item${lpShown.length===1?'':'s'}`
+ $('lp-list').innerHTML=lpShown.length?lpShown.slice(0,400).map((e,n)=>{
+  const fits=e.L<=free+1e-9,dup=e.comps.some(k=>cycSet.has(k))
+  const c=e.special?e.comp:e.it.components?.[0]||{name:e.name,tier:e.tier}
+  return `<div class="lp-row${fits&&!dup?'':' nofit'}" role="option" data-n="${n}" title="${esc(e.name+(e.note?' — '+e.note:'')+(dup?' — already in this reset cycle':''))}"><span class="item-line">${originIcon(c)}${badge(e.tier)}${thumb(c)}<span class="item-name">${esc(e.name)}${e.special?' <span style="color:#fdcb58">🛡</span>':''}</span></span><span class="num">×${esc(numberText(e.multiplier))}</span><span class="num">${esc(numberText(e.L))}</span><span class="num">${dup?'<span title="Already in this reset cycle" style="color:#ff8a8a">dup</span>':fits?'✓':'<span style="color:#ff8a8a">✗</span>'}</span></div>`}).join(''):`<div class="ms-empty">${onlyOwned?'No owned items match. Untick "Only items I have" or mark items in Your Items.':'No items match.'}</div>`
+}
+$('lp-list').addEventListener('click',ev=>{const row=ev.target.closest('.lp-row');if(!row)return;const e=lpShown[row.dataset.n];sb.lines[lpLine.i].items.push(e.key);renderBuilder()})
+$('lp-search').addEventListener('input',refreshPicker);$('lp-owned').addEventListener('change',refreshPicker)
+$('lp-done').onclick=closePicker
+$('lp-panel').addEventListener('keydown',ev=>{if(ev.key==='Escape'){ev.preventDefault();closePicker()}})
+document.addEventListener('mousedown',ev=>{if(!lpLine.closed&&!$('lp-panel').contains(ev.target)&&!ev.target.closest('[data-act="add"]'))closePicker()})
+
+/* ---------- line editing ---------- */
+$('sb-lines').addEventListener('click',ev=>{
+ const b=ev.target.closest('button[data-act]');if(!b)return
+ const i=Number(b.dataset.li),act=b.dataset.act
+ if(act==='add'){if(!lpLine.closed&&lpLine.i===i){closePicker();return}closePicker();openPicker(i);return}
+ if(act==='rm'){sb.lines[i].items.splice(Number(b.dataset.ii),1);renderBuilder();return}
+ if(act==='rmline'){const before=JSON.parse(JSON.stringify(sb.lines));closePicker();sb.lines.splice(i,1);renderBuilder();toast(`Removed Line ${i+1}`,'Undo',()=>{sb.lines=before;renderBuilder()})}
+})
+$('sb-lines').addEventListener('input',ev=>{const t=ev.target;if(t.dataset.act==='len'){sb.lines[Number(t.dataset.li)].len=t.value;sbSchedule()}})
+$('sb-lines').addEventListener('change',ev=>{const t=ev.target;if(t.dataset.act==='end'){sb.lines[Number(t.dataset.li)].end=t.value;renderBuilder()}})
+$('sb-add-line').onclick=()=>{const last=sb.lines[sb.lines.length-1];sb.lines.push({len:last?last.len:'40',end:'auto',items:[]});renderBuilder();const ins=$('sb-lines').querySelectorAll('input[data-act=len]');ins[ins.length-1]?.select()}
+$('sb-clear-lines').onclick=()=>{const before=JSON.parse(JSON.stringify(sb.lines));if(!before.some(l=>l.items.length))return;closePicker();sb.lines.forEach(l=>l.items=[]);renderBuilder();toast('Emptied every line','Undo',()=>{sb.lines=before;renderBuilder()})}
+$('sb-auto').onclick=()=>{closePicker();autoBuild()}
+
 function SB_PORTABLES_TIER(b){return (sbData('portables')||[]).find(p=>String(p.dbId)===String(b.id))?.tier||'Exotic'}
 function SB_BLASTER_IMG(b){return (sbData('portables')||[]).find(p=>String(p.dbId)===String(b.id))?.imageUrl}
 let sbTimer;const sbSchedule=()=>{clearTimeout(sbTimer);sbTimer=setTimeout(renderBuilder,60)}
@@ -1362,10 +1586,10 @@ $('sb-port-all').onclick=()=>{for(const g of SB_PORT_GROUPS)sb.portables[g.key]=
 $('sb-port-none').onclick=()=>{const before={...sb.portables};sb.portables={};renderSbPortables();sbSchedule();toast('Marked all portables as not owned','Undo',()=>{sb.portables=before;renderSbPortables();sbSchedule()})}
 for(let i=0;i<=20;i++)$('sb-skips').add(new Option(i+' ('+(i+1)+' li'+(i?'ves':'fe')+')',String(i)))
 $('sb-skips').onchange=e=>{sb.skips=parseInt(e.target.value)||0;sbSchedule()}
-const SB_TEXT=['life','ore','furnace','price','maxlen','target','shields']
+const SB_TEXT=['life','ore','furnace','price','target','shields']
 for(const k of SB_TEXT)$('sb-'+k).addEventListener('input',e=>{sb[k]=e.target.value;sbSchedule()})
 for(const k of ['variants','void','mask'])$('sb-'+k).onchange=e=>{sb[k==='void'?'voidDrive':k]=e.target.value;sbSchedule()}
-$('sb-reset-opts').onclick=()=>{for(const k of ['ore','furnace','price','maxlen','target','shields']){sb[k]='';$('sb-'+k).value=''};sb.variants='all';$('sb-variants').value='all';sbSchedule()}
+$('sb-reset-opts').onclick=()=>{for(const k of ['ore','furnace','price','target','shields']){sb[k]='';$('sb-'+k).value=''};sb.variants='all';$('sb-variants').value='all';sbSchedule()}
 function loadBuilder(){
  const s=storage.get(SB_KEY)||{}
  for(const k of ['owned','resetters','blasters','portables'])if(s[k]&&typeof s[k]==='object')sb[k]=s[k]
@@ -1374,11 +1598,32 @@ function loadBuilder(){
  if(s.variants==='safe')sb.variants='safe'
  if(s.voidDrive==='on')sb.voidDrive='on'
  if(s.mask==='on')sb.mask='on'
+ if(Array.isArray(s.lines)&&s.lines.length)sb.lines=s.lines.filter(l=>l&&typeof l==='object').map(l=>({len:String(l.len??'40'),end:typeof l.end==='string'?l.end:'auto',items:Array.isArray(l.items)?l.items.filter(k=>typeof k==='string'):[]}))
  if(!sb.life&&rb.life)sb.life=String(rb.life)
  for(const k of SB_TEXT)$('sb-'+k).value=sb[k]
  $('sb-skips').value=String(sb.skips);$('sb-variants').value=sb.variants;$('sb-void').value=sb.voidDrive;$('sb-mask').value=sb.mask
 }
-function refreshBuilderData(){buildComponents();buildSbTierFilter();renderOwnList();renderSbResetters();renderSbBlasters();renderSbPortables();renderBuilder()}
+function refreshBuilderData(){buildComponents();buildPool();buildSbTierFilter();renderOwnList();renderSbResetters();renderSbBlasters();renderSbPortables();renderBuilder()}
+function sbSelectionCounts(){
+ const items=Object.values(sb.owned).filter(v=>v>0).length,res=Object.keys(sb.resetters).length,bl=Object.keys(sb.blasters).length,po=Object.keys(sb.portables).length
+ return {items,res,bl,po,total:items+res+bl+po}
+}
+function renderSbSelSummary(){
+ const c=sbSelectionCounts(),parts=[]
+ if(c.items)parts.push(`${c.items} item${c.items===1?'':'s'}`)
+ if(c.res)parts.push(`${c.res} resetter${c.res===1?'':'s'}`)
+ if(c.bl)parts.push(`${c.bl} blaster${c.bl===1?'':'s'}`)
+ if(c.po)parts.push(`${c.po} portable${c.po===1?'':'s'}`)
+ $('sb-sel-summary').textContent=parts.length?'Marked as owned: '+parts.join(', '):'Nothing marked as owned yet'
+ $('sb-clear-all').disabled=!c.total
+}
+$('sb-clear-all').onclick=()=>{
+ const before={owned:{...sb.owned},resetters:{...sb.resetters},blasters:{...sb.blasters},portables:{...sb.portables}}
+ const n=sbSelectionCounts().total;if(!n)return
+ sb.owned={};sb.resetters={};sb.blasters={};sb.portables={}
+ renderOwnList();renderSbResetters();renderSbBlasters();renderSbPortables();renderBuilder()
+ toast(`Cleared ${n} selection${n===1?'':'s'}`,'Undo',()=>{Object.assign(sb,before);renderOwnList();renderSbResetters();renderSbBlasters();renderSbPortables();renderBuilder()})
+}
 $('tab-builder').onclick=()=>showTab('builder')
 
 
