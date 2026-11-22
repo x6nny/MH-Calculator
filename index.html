@@ -25,8 +25,10 @@ a:hover{text-decoration:underline}
 
 /* top bar */
 .topbar{display:flex;align-items:flex-end;justify-content:space-between;gap:8px;padding:6px 6px 0;border-bottom:1px solid #6e6e6e;background:#2e2e2e;position:sticky;top:0;z-index:20}
-.tabs{display:flex;gap:4px}
-.tab{display:inline-grid;place-items:center;height:calc(var(--line-height) + 13px);min-width:8em;padding:5px 16px;background:#3a3a3a;border:1px solid #6e6e6e;border-bottom:2px solid transparent;border-radius:0;font-weight:400;margin-bottom:-1px;color:#cfcfcf}
+.tabs{display:flex;gap:3px;overflow-x:auto;min-width:0;scrollbar-width:thin}
+.topbar .tabs{flex:1 1 auto}
+.top-right{flex:none}
+.tab{display:inline-grid;place-items:center;height:calc(var(--line-height) + 13px);min-width:0;padding:5px 12px;white-space:nowrap;flex:none;background:#3a3a3a;border:1px solid #6e6e6e;border-bottom:2px solid transparent;border-radius:0;font-weight:400;margin-bottom:-1px;color:#cfcfcf}
 .tab:hover{background:#444}
 .tab[aria-selected=true]{background:#464646;border-bottom-color:#ddd;font-weight:600;color:#eee}
 .top-right{display:flex;align-items:center;gap:6px;padding-bottom:5px;color:var(--muted)}
@@ -295,7 +297,96 @@ tbody tr:nth-child(odd) td{background:#333}
 .it-table tr.gone td{opacity:.55}
 .it-tag{display:inline-block;font-size:10px;border:1px solid #666;border-radius:6px;padding:0 4px;margin:1px 2px 0 0;color:#ccc}
 .it-tag.new{border-color:#5cbe5c;color:#5cbe5c}
+.st-tools{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.st-tools input{flex:1;min-width:200px;border-radius:0;min-height:calc(var(--line-height) + 9px)}
+.st-filters{display:flex;gap:4px}
+.st-filters button[aria-pressed=true]{background:#4a5a70;border-color:#8fb4ff;color:#fff;font-weight:600}
+.st-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(380px,1fr));gap:10px}
+.st-card{border:1px solid #535353;background:#333;display:flex;flex-direction:column}
+.st-card.st-immunity{border-color:#4a5a70}
+.st-head{display:flex;align-items:center;gap:6px;padding:8px 10px;background:#2a2a2a;border-bottom:1px solid #4a4a4a;min-height:46px}
+.st-head .spacer{flex:1}
+.st-group{font-size:11px;color:var(--muted)}
+.st-tag{font-size:10px;font-weight:600;border:1px solid;border-radius:7px;padding:0 6px;white-space:nowrap}
+.st-tag.bad{color:#ff8a8a;border-color:#a04848;background:#3d2c2c}
+.st-tag.ok{color:#5cbe5c;border-color:#3f7a4a;background:#2c3d30}
+.st-body{padding:6px 10px 8px;display:grid;gap:5px}
+.st-row{display:grid;grid-template-columns:104px minmax(0,1fr);gap:8px;font-size:12.5px;line-height:1.45}
+.st-row b{color:var(--muted);font-weight:600}
+.st-sub{display:block;color:var(--muted);font-size:11px;margin-top:2px}
+.st-chips{display:flex;flex-wrap:wrap;gap:3px;margin-top:4px}
+.st-chips .cr-chip,.st-row .cr-chip{display:inline-flex}
+.st-more summary{cursor:pointer;color:#8fb4ff;font-size:12px}
+.st-more[open] summary{margin-bottom:3px}
+/* ---- status text effects ---- */
+.fx{font-size:22px;font-weight:800;letter-spacing:.5px;display:inline-flex;position:relative;line-height:1.1;font-family:"Trebuchet MS",Tahoma,sans-serif}
+.fx>span{display:inline-block;position:relative}
+.fx-fire>span{background:linear-gradient(0deg,#ff2a00,#ff8a00 45%,#ffe76b);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 0 4px rgba(255,90,0,.8));animation:flicker 1.1s infinite alternate;animation-delay:calc(var(--i)*-.13s)}
+@keyframes flicker{0%{transform:translateY(0) scaleY(1);filter:drop-shadow(0 0 3px rgba(255,90,0,.7))}50%{transform:translateY(-2px) scaleY(1.08)}100%{transform:translateY(-1px) scaleY(.96);filter:drop-shadow(0 -2px 7px rgba(255,170,0,.9))}}
+.fx-eternal>span{background:linear-gradient(0deg,#3a7bff,#9fd0ff 45%,#ffffff);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 0 5px rgba(90,160,255,.9));animation:flicker 1.4s infinite alternate;animation-delay:calc(var(--i)*-.17s)}
+.fx-chaos>span{background:linear-gradient(0deg,#0a8a2a,#3dff6e 45%,#d6ffde);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 0 5px rgba(40,255,90,.8));animation:flicker .8s infinite alternate;animation-delay:calc(var(--i)*-.11s)}
+.fx-frost{color:#d8f3ff;text-shadow:0 0 2px #fff,0 0 6px #6fd3ff,0 0 14px #2a8cff}
+.fx-frost>span{background:linear-gradient(180deg,#ffffff,#bdeaff 40%,#5bb8ff);-webkit-background-clip:text;background-clip:text;color:transparent;animation:frost 3s infinite;animation-delay:calc(var(--i)*.12s)}
+.fx-frost::after{content:"❄";position:absolute;right:-16px;top:-6px;font-size:13px;color:#cdefff;text-shadow:0 0 6px #6fd3ff;animation:spin 6s linear infinite}
+@keyframes frost{0%,100%{filter:brightness(1)}50%{filter:brightness(1.6) drop-shadow(0 0 3px #bfefff)}}
+@keyframes spin{to{transform:rotate(360deg)}}
+.fx-rad>span{color:#7dff3a;text-shadow:0 0 4px #39ff14,0 0 10px #2bd10e,0 0 18px #1a8a07;animation:radpulse 1.6s ease-in-out infinite;animation-delay:calc(var(--i)*.08s)}
+.fx-rad::before{content:"☢";margin-right:6px;color:#e6ff3a;text-shadow:0 0 8px #b6ff00;animation:spin 4s linear infinite;display:inline-block}
+@keyframes radpulse{0%,100%{opacity:1;text-shadow:0 0 4px #39ff14,0 0 10px #2bd10e}50%{opacity:.75;text-shadow:0 0 8px #39ff14,0 0 22px #39ff14,0 0 30px #1a8a07}}
+.fx-sparkle>span{background:linear-gradient(110deg,#fff6c2 20%,#ffd54a 40%,#ffffff 50%,#ffd54a 60%,#fff6c2 80%);background-size:250% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:shine 2.4s linear infinite}
+.fx-sparkle::before,.fx-sparkle::after{content:"✦";position:absolute;color:#fff7c8;text-shadow:0 0 6px #ffd54a;font-size:12px;animation:twinkle 1.6s ease-in-out infinite}
+.fx-sparkle::before{left:-12px;top:-6px}.fx-sparkle::after{right:-12px;bottom:-4px;animation-delay:.8s}
+@keyframes shine{from{background-position:150% 0}to{background-position:-100% 0}}
+@keyframes twinkle{0%,100%{opacity:0;transform:scale(.4) rotate(0)}50%{opacity:1;transform:scale(1.2) rotate(90deg)}}
+.fx-poison>span{color:#9cff57;text-shadow:0 0 6px #3c8f12,0 2px 0 #2b5f0c;animation:wobble 2.2s ease-in-out infinite;animation-delay:calc(var(--i)*.15s)}
+.fx-poison::after{content:"";position:absolute;left:10%;right:10%;top:100%;height:6px;background:radial-gradient(circle,#7ee03f 30%,transparent 32%) 0 0/9px 6px;opacity:.7;animation:drip 2s linear infinite}
+@keyframes wobble{0%,100%{transform:translateY(0) skewX(0)}50%{transform:translateY(1px) skewX(-6deg)}}
+@keyframes drip{from{background-position:0 0;opacity:.8}to{background-position:0 8px;opacity:0}}
+.fx-smoke>span{color:#cfcfcf;text-shadow:0 -3px 8px rgba(200,200,200,.6),0 -8px 14px rgba(150,150,150,.35);animation:smoke 3s ease-in-out infinite;animation-delay:calc(var(--i)*.2s)}
+@keyframes smoke{0%,100%{filter:blur(0);opacity:1}50%{filter:blur(1px);opacity:.75;transform:translateY(-1px)}}
+.fx-wet>span{background:linear-gradient(180deg,#bfe6ff,#3fa2ff 60%,#1a5fd0);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 2px 2px rgba(20,80,200,.6));animation:wave 1.8s ease-in-out infinite;animation-delay:calc(var(--i)*.12s)}
+.fx-wet::after{content:"💧";position:absolute;right:-16px;top:0;font-size:12px;animation:dropfall 1.8s ease-in infinite}
+@keyframes wave{0%,100%{transform:translateY(0)}50%{transform:translateY(3px)}}
+@keyframes dropfall{0%{transform:translateY(-4px);opacity:0}30%{opacity:1}100%{transform:translateY(14px);opacity:0}}
+.fx-hydro>span{color:#ffd36b;text-shadow:0 0 4px #c98a00;animation:wave 2s ease-in-out infinite reverse;animation-delay:calc(var(--i)*.1s)}
+.fx-float>span{color:#d6c4ff;text-shadow:0 0 6px #8a6dff;animation:floaty 2.4s ease-in-out infinite;animation-delay:calc(var(--i)*.14s)}
+@keyframes floaty{0%,100%{transform:translateY(2px) rotate(-3deg)}50%{transform:translateY(-6px) rotate(3deg)}}
+.fx-fireproof>span{background:linear-gradient(0deg,#ff6a00,#ffcf6b);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 0 1px #6fd3ff) drop-shadow(0 0 4px #2a8cff)}
+.fx-fireproof::before{content:"🛡";margin-right:6px;font-size:16px}
+.fx-immune>span{color:#eaf6ff;text-shadow:0 0 1px #fff,0 0 6px #5cbe5c,0 0 12px #2e8a2e}
+.fx-immune::before{content:"🛡";margin-right:6px;font-size:16px;filter:hue-rotate(60deg)}
+.fx-immune{font-size:19px}
+.fx-edu>span{color:#5cff8a;text-shadow:0 0 6px #1d8a3a;animation:radpulse 2.4s ease-in-out infinite}
+.fx-edu::before{content:"△";margin-right:6px;color:#5cff8a;text-shadow:0 0 8px #1d8a3a;animation:spin 5s linear infinite;display:inline-block}
+.fx-draedon>span{color:#7fd4ff;text-shadow:0 0 6px #1f7bff,2px 0 0 rgba(60,140,255,.5),-2px 0 0 rgba(140,220,255,.4);animation:glitch 2.6s steps(2) infinite;animation-delay:calc(var(--i)*.09s)}
+.fx-draedon::before{content:"⬡";margin-right:6px;color:#7fd4ff;text-shadow:0 0 6px #1f7bff;display:inline-block;animation:spin 3s linear infinite}
+@keyframes glitch{0%,90%,100%{transform:none}92%{transform:translate(2px,-1px) skewX(10deg)}95%{transform:translate(-2px,1px)}}
+.fx-void>span{color:#1a0526;-webkit-text-stroke:1px #c07cff;text-shadow:0 0 4px #c07cff,0 0 10px #8a2fff,0 0 20px #5a10c0;animation:voidflick 3s infinite;animation-delay:calc(var(--i)*.07s)}
+@keyframes voidflick{0%,100%{opacity:1}45%{opacity:1}47%{opacity:.2}49%{opacity:1}75%{transform:translateY(0)}78%{transform:translateY(1px) scale(1.05)}}
+.fx-shield>span{background:linear-gradient(180deg,#ffffff,#a9b8c8 50%,#6d7f93);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 0 3px #9fd0ff)}
+.fx-shield{padding:0 8px;border:2px solid #9fd0ff;border-radius:6px 6px 14px 14px;box-shadow:0 0 8px #4f9cff inset,0 0 8px #4f9cff;animation:shieldpulse 2.4s ease-in-out infinite}
+@keyframes shieldpulse{50%{box-shadow:0 0 14px #9fd0ff inset,0 0 14px #9fd0ff}}
+.fx-gaia>span{color:#b6ff9a;text-shadow:0 0 6px #2e8a2e,0 0 12px #1d5f1d;animation:floaty 3s ease-in-out infinite;animation-delay:calc(var(--i)*.2s)}
+.fx-gaia::after{content:"🌿";position:absolute;right:-18px;top:-4px;font-size:13px;animation:twinkle 2.6s ease-in-out infinite}
+.fx-ban>span{color:#ff6b6b;text-shadow:0 0 4px #7a0000}
+.fx-ban{font-size:19px;padding:1px 8px;border:2px solid #ff6b6b;border-radius:4px;transform:rotate(-2deg)}
+.fx-ban::after{content:"";position:absolute;left:4px;right:4px;top:50%;height:2px;background:#ff6b6b;transform:rotate(-4deg);opacity:.85}
+.fx-nova>span{color:#fff;text-shadow:0 0 4px #fff,0 0 10px #8fd0ff,0 0 20px #4f6dff;animation:nova 2s ease-in-out infinite;animation-delay:calc(var(--i)*.1s)}
+@keyframes nova{0%,100%{transform:scale(1)}50%{transform:scale(1.15);text-shadow:0 0 6px #fff,0 0 18px #8fd0ff,0 0 32px #4f6dff}}
+.fx-novaschro>span{color:#e3b6ff;text-shadow:0 0 6px #a14fff,0 0 14px #6a1fff;animation:nova 2.4s ease-in-out infinite;animation-delay:calc(var(--i)*.08s)}
+.fx-gold>span{background:linear-gradient(110deg,#a8740a 20%,#ffd75a 40%,#fff6c8 50%,#ffd75a 60%,#a8740a 80%);background-size:250% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 1px 0 #5c3f00);animation:shine 3s linear infinite}
+.fx-plague>span{color:#b8c94a;text-shadow:0 0 6px #5b6a12,0 2px 0 #3b2a10;animation:plague 2.8s ease-in-out infinite;animation-delay:calc(var(--i)*.18s)}
+@keyframes plague{0%,100%{transform:scale(1)}50%{transform:scale(1.18) translateY(-1px)}}
+.fx-swag>span{color:#ff4fd8;text-shadow:0 0 6px currentColor;animation:hue 2.2s linear infinite,floaty 1.8s ease-in-out infinite;animation-delay:calc(var(--i)*-.15s)}
+@keyframes hue{to{filter:hue-rotate(360deg)}}
+.fx-stasis>span{color:#a6f0ff;text-shadow:0 0 4px #2fb7d8;opacity:.9}
+.fx-stasis{letter-spacing:3px}
+.fx-stasis::after{content:"⏸";margin-left:8px;color:#a6f0ff;animation:radpulse 2s infinite}
+@media (prefers-reduced-motion:reduce){.fx,.fx>span,.fx::before,.fx::after{animation:none!important}}
 @media (max-width:760px){
+ .st-cards{grid-template-columns:1fr}
+ .st-row{grid-template-columns:1fr;gap:1px}
+
  .it-tools{grid-template-columns:1fr 1fr}
 
  .cr-cats{grid-template-columns:1fr}
@@ -312,6 +403,7 @@ tbody tr:nth-child(odd) td{background:#333}
  .ms-head span:nth-child(5),.ms-head span:nth-child(6),.ms-row .c-len,.ms-row .c-qty{display:none}
  .tier-badge{width:auto}
  .tabs{overflow-x:auto;max-width:100%;scrollbar-width:none}
+ .top-right{flex:1 1 100%;flex-wrap:wrap;justify-content:space-between}
  .tab{min-width:0;padding:5px 10px;white-space:nowrap;flex:none}
  .sb-result{min-width:760px}
  .sb-result td.cond{min-width:230px}
@@ -339,7 +431,7 @@ tbody tr:nth-child(odd) td{background:#333}
 </head>
 <body>
 <header class="topbar">
- <nav class="tabs" role="tablist" aria-label="Pages"><button type="button" class="tab" role="tab" id="tab-calc" aria-controls="page-calc" aria-selected="true">Calculator</button><button type="button" class="tab" role="tab" id="tab-rebirth" aria-controls="page-rebirth" aria-selected="false" tabindex="-1">Rebirth</button><button type="button" class="tab" role="tab" id="tab-platforms" aria-controls="page-platforms" aria-selected="false" tabindex="-1">Platforms</button><button type="button" class="tab" role="tab" id="tab-builder" aria-controls="page-builder" aria-selected="false" tabindex="-1">Setup Builder</button><button type="button" class="tab" role="tab" id="tab-codes" aria-controls="page-codes" aria-selected="false" tabindex="-1">Codes</button><button type="button" class="tab" role="tab" id="tab-suffixes" aria-controls="page-suffixes" aria-selected="false" tabindex="-1">Cash Suffixes</button><button type="button" class="tab" role="tab" id="tab-crafting" aria-controls="page-crafting" aria-selected="false" tabindex="-1">Crafting</button><button type="button" class="tab" role="tab" id="tab-items" aria-controls="page-items" aria-selected="false" tabindex="-1">Items</button></nav>
+ <nav class="tabs" role="tablist" aria-label="Pages"><button type="button" class="tab" role="tab" id="tab-calc" aria-controls="page-calc" aria-selected="true">Calculator</button><button type="button" class="tab" role="tab" id="tab-rebirth" aria-controls="page-rebirth" aria-selected="false" tabindex="-1">Rebirth</button><button type="button" class="tab" role="tab" id="tab-platforms" aria-controls="page-platforms" aria-selected="false" tabindex="-1">Platforms</button><button type="button" class="tab" role="tab" id="tab-builder" aria-controls="page-builder" aria-selected="false" tabindex="-1">Setup Builder</button><button type="button" class="tab" role="tab" id="tab-codes" aria-controls="page-codes" aria-selected="false" tabindex="-1">Codes</button><button type="button" class="tab" role="tab" id="tab-suffixes" aria-controls="page-suffixes" aria-selected="false" tabindex="-1">Cash Suffixes</button><button type="button" class="tab" role="tab" id="tab-crafting" aria-controls="page-crafting" aria-selected="false" tabindex="-1">Crafting</button><button type="button" class="tab" role="tab" id="tab-items" aria-controls="page-items" aria-selected="false" tabindex="-1">Items</button><button type="button" class="tab" role="tab" id="tab-status" aria-controls="page-status" aria-selected="false" tabindex="-1">Status Effects</button></nav>
  <div class="top-right">
   <span id="data-status"></span>
   <button type="button" class="icon-btn" id="load-btn" title="Read item data from an updated copy of the MPU site's index.html">
@@ -805,7 +897,27 @@ tbody tr:nth-child(odd) td{background:#333}
  </section>
  <p class="note">Every item page on the <a href="https://minershaven.fandom.com/wiki/Welcome_To_The_Miner%27s_Haven_Wikia!" target="_blank" rel="noopener noreferrer">Miner's Haven Wiki</a> (<span id="it-fetched"></span>). Multipliers are read from each item's effects text, so check the effects for conditions. Sizes are length × width × height in units. MPU = multiplier<sup>1 / length</sup>. Upgraders that weren't in your MPU data before were added to the Calculator and Setup Builder; items already there were left unchanged.</p>
 </div>
+
+<div id="page-status" role="tabpanel" aria-labelledby="tab-status" hidden>
+ <section class="panel" aria-labelledby="st-title">
+  <div class="panel-title" id="st-title">Ore Status Effects</div>
+  <div class="panel-body">
+   <p class="note" style="margin-top:0">Upgraders can give ore status effects. Most can be removed by <b>Wild Spore</b>, <b>Deadly Spore</b>, <b>Azure Spore</b>, <b>The Death Cap</b> and <b>Resetting Devices</b>. Effects marked <span class="st-tag bad">Destroys ore</span> will kill the ore if you don't deal with them.</p>
+   <div class="st-tools">
+    <div class="st-filters" id="st-filters" role="group" aria-label="Filter by group"><button type="button" data-g="All">All</button><button type="button" data-g="Common">Common</button><button type="button" data-g="Immunity">Immunities</button><button type="button" data-g="Other">Other</button></div>
+    <input type="search" id="st-search" placeholder="Search effects (e.g. fire, shield, Spore)" aria-label="Search status effects" autocomplete="off">
+   </div>
+  </div>
+ </section>
+ <div class="st-cards" id="st-cards"></div>
+ <section class="panel" aria-labelledby="st-react-title" style="margin-top:10px">
+  <div class="panel-title" id="st-react-title">How Effects React With Each Other</div>
+  <div class="breakdown-wrap"><table class="breakdown"><thead><tr><th>Ore already has</th><th>Then gets</th><th>Result</th></tr></thead><tbody id="st-reactions"></tbody></table></div>
+ </section>
+ <p class="note">Source: <a href="https://minershaven.fandom.com/wiki/Ore_Properties" target="_blank" rel="noopener noreferrer">Miner's Haven Wiki: Ore Properties</a>. "Items that mention…" searches every wiki item's effects text, so a few matches may only mention the effect (for example, an item that blocks it).</p>
+</div>
 </main>
+
 
 <div class="toast" id="toast" role="status" hidden></div>
 
@@ -1154,7 +1266,7 @@ $('reset-data').onclick=()=>{storage.del(DATA_KEY);useData(BUILTIN,false);state.
 
 
 /* ---------- tabs ---------- */
-const TAB_KEY='mpucalc.tab.v1',TAB_NAMES=['calc','rebirth','platforms','builder','codes','suffixes','crafting','items']
+const TAB_KEY='mpucalc.tab.v1',TAB_NAMES=['calc','rebirth','platforms','builder','codes','suffixes','crafting','items','status']
 function showTab(name,focus=false){
  for(const n of TAB_NAMES){
   const on=n===name,tab=$('tab-'+n)
@@ -2262,6 +2374,86 @@ for(const id of ['it-tier','it-type','it-sort','it-mult','it-gone'])$(id).addEve
 $('it-more').onclick=()=>{itLimit+=300;renderItems(false)}
 $('tab-items').onclick=()=>showTab('items')
 
+/* ---------- status effects ---------- */
+// [name, group, fx class, destructive (true/false/null), what it does, example item, how to remove, extra notes, regex for items that give it, regex for items that remove it]
+const STATUS=[
+ ['Fire','Common','fx-fire',true,'Ignites the ore for 4 seconds. If it isn\'t put out in time, the ore is destroyed.','Portable Flamethrower','Extinguish it: Wild Spore, Freon Sprayer, or anything that makes ore Wet or Fireproof.','Fire replaces Frostbite (unless the ore was Wet/Fireproof first). Fire ignores Stasis.',/(sets?|setting) (the )?ores? (on fire|ablaze)|\bignit(e|es|ion)\b|inflicts? fire/i,/extinguish/i],
+ ['Frostbite','Common','fx-frost',true,'The opposite of Fire: puts the ore on a destruction timer, turns its material to ice and paints it blue.','Father of Freon','Set the ore on fire to revert the frostbite, then extinguish the fire.','Wet or Fireproof ore still gets frostbite.',/frostbite|freezes? (the )?ores?/i,null],
+ ['Radioactive','Common','fx-rad',true,'The ore explodes after a while, destroying it.','Radioactive Refiner','Spore items (Wild Spore, Deadly Spore, Azure Spore), The Death Cap or a Resetting Device.','Radioactive Immunity (e.g. Havium Mine ore) blocks it.',/radioactiv/i,/(remov|cure|cleans|clear)\w*[^.;]{0,40}radioactiv/i],
+ ['Sparkles','Common','fx-sparkle',false,'Makes the ore sparkle. Sparkling ore can power the Northern Lights but makes the Azure Spore useless.','Angel\'s Blessing','The Death Cap, Fractured Reality, Soul Blossom or a Resetting Device.','',/sparkl/i,/(remov|clear)\w*[^.;]{0,30}sparkl/i],
+ ['Poison','Common','fx-poison',true,'Poisons the ore (green smoke). It\'s usually destroyed after 4 seconds if not cured.','Chemical Refiner','Spore items (Wild Spore, Deadly Spore, Azure Spore), The Death Cap or a Resetting Device.','Poison and Smoking can both be on one ore. Poison Immunity blocks it.',/poison/i,/(remov|cure|cleans|clear)\w*[^.;]{0,40}poison/i],
+ ['Smoking','Common','fx-smoke',false,'A Poison variant with grey smoke. Same behaviour as Poison but with no destruction timer.','Robotic Enhancer','Maintenance Supporter.','',/smok(ing|e)/i,null],
+ ['Wet','Common','fx-wet',false,'Puts out fire and makes the ore fireproof for a while.','Atlantic Monolith','Blazing Annihilator removes it.','Doesn\'t stack with Fireproof. Hydrophobic ore can\'t get wet. Many Midas setups use wet ore.',/\bwet\b|soak/i,null],
+ ['Anti-Gravity','Common','fx-float',false,'Flips the ore\'s gravity so it floats upwards.','Anti-Gravity Device','Gravity Normalizer.','',/anti-?gravity|floats? upward/i,/gravity normali/i],
+ ['Fireproof','Immunity','fx-fireproof',false,'Puts out fire and makes the ore immune to Fire.','Freon Bombarder','Blazing Annihilator.','Not the same as the Ice material. Doesn\'t stack with Wet.',/fireproof|fire[- ]?immun/i,null],
+ ['Poison Immunity','Immunity','fx-immune',false,'Makes the ore immune to Poison.','Havium Mine','Some upgraders remove immunities.','',/poison immun/i,null],
+ ['Radioactive Immunity','Immunity','fx-immune',false,'Makes the ore immune to Radioactive.','Havium Mine','Some upgraders remove immunities.','',/radiat\w* immun|radioactiv\w* immun/i,null],
+ ['Frostbite Immunity','Immunity','fx-immune',false,'Makes the ore immune to Frostbite.','Havium Mine','Some upgraders remove immunities.','',/frostbite immun/i,null],
+ ['Plague Immunity','Immunity','fx-immune',false,'Gives the ore temporary immunity to Plague.','Ghosdeeri\'s Antidote','Wears off over time.','',/plague immun|antidote/i,null],
+ ['Hydrophobic','Immunity','fx-hydro',false,'Stops the ore from getting Wet. Only given by the Honeycomb Cake and Famished Farm.','Honeycomb Cake','Skydance Serenade.','',/hydrophob/i,null],
+ ['Education','Other','fx-edu',true,'A waiting period where the ore\'s upgrade count must not change, or it\'s destroyed. Shields don\'t protect against it. Green illuminati particles.','Ore Illuminator','Wait out the timer, or make it instant with a Gargantium Core and its Pulsar.','Upgraders with exactly 0 upgrade counter don\'t break it.',/educat/i,null],
+ ['Draedon','Other','fx-draedon',true,'Like Education (blue polygon particles): the ore\'s upgrade count must not change during the wait, or it\'s destroyed. Bypasses shields.','Draedon\'s Gauntlet','Wait out the timer, or make it instant with a Gargantium Core and Ore Hypernova.','',/draedon'?s? (effect|upgrade)|draedon's gauntlet's/i,null],
+ ['Void','Other','fx-void',true,'Only from the Void Drive: 3 seconds of complete immunity to destruction, then the ore is destroyed.','Void Drive','Can\'t be removed. Sell the ore within 3 seconds.','Void Drive also gives 15 shields and DON Banned.',/\bvoid(ed)?\b[^.;]{0,30}(effect|immun|3 sec)|ore is destroyed after 3 seconds/i,null],
+ ['Shield','Other','fx-shield',false,'Stops the ore being destroyed. The first blaster after gaining a shield always upgrades and never destroys.','Illusions of Void','Used up by death rolls (one shield per roll).','Not the same as the Forcefield material. Void Drive gives 15.',/shield/i,null],
+ ['Gaia\'s Blessing','Other','fx-gaia',false,'Only from the Garden of Gaia. Green particles; adds a bonus ×1.02 to every upgrade.','Garden of Gaia','Wears off when the blessing ends.','Stacks with The Chaosrealm\'s Chaotic Fire.',/gaia'?s blessing/i,null],
+ ['Chaotic Fire','Other','fx-chaos',false,'Only from The Chaosrealm. Green fire particles; adds a bonus ×1.05 to every upgrade.','The Chaosrealm','','Stacks with Gaia\'s Blessing.',/chaotic fire/i,null],
+ ['Replicator Banned','Other','fx-ban',false,'The ore can\'t be duplicated.','Methuselah\'s Mask','Can\'t be removed by any means.','Also from the Leggendary Black Hole and some Quest items.',/replicator[- ]?ban|can'?t be duplicated/i,null],
+ ['Teleporter Banned','Other','fx-ban',false,'The ore can\'t be teleported by Teleporters (Ore Nebula still works).','Leggendary Black Hole','','',/teleporter[- ]?ban|can(no|')t (be )?teleport/i,null],
+ ['DON Banned','Other','fx-ban',false,'The ore can\'t be "pulsed" by the Devourer of Nightmares.','Void Drive','','',/pulsar-activated with devourer|don[- ]?ban/i,null],
+ ['Nova','Other','fx-nova',false,'Gives a ×4 boost to Star multipliers, or ×25 to the Blue Supergiant.','Nova Star','','',/\bnova\b[^.;]{0,20}(effect|boost)|star multipliers/i,null],
+ ['Nova-Schro','Other','fx-novaschro',false,'A 5-second ×1.3 bonus to Schrodinger multipliers (not Shop Schrodingers).','Nova Evaluator','Wears off after 5 seconds.','',/schrodinger multipliers/i,null],
+ ['Golden','Other','fx-gold',false,'Turns the ore\'s material to foil and its colour to yellow.','King Gold Mine','','',/colou?rs? (the )?ores? gold|golden/i,null],
+ ['Plague','Other','fx-plague',true,'The ore grows 10% bigger over and over and is destroyed after 15 growths. You have a 5-second window to remove it.','Bubonic Plague','Ghosdeeri\'s Antidote (within the 5-second window).','Plague bypasses shields on some items (e.g. Airborne Pathogenic Spewer).',/plague/i,/antidote/i],
+ ['Swag Factor','Other','fx-swag',false,'Only from the Lucky Hat. Swag.','Lucky Hat','','',/swag factor/i,null],
+ ['Stasis','Other','fx-stasis',false,'The ore stops moving for a set time (Eggscream Refiner: 7 seconds).','Eggscream Refiner','Wears off after the time.','Burning ore ignores Stasis and keeps moving.',/stasis/i,null],
+ ['Eternal Flame','Other','fx-eternal',false,'Only from the Solar Apocalypse. Looks like Fire but never destroys the ore. The Awakened Jack O Lantern processes it at a higher rate.','Solar Apocalypse','','Fireproof ore won\'t catch Eternal Flame.',/eternal flame/i,null],
+]
+const STATUS_REACTIONS=[
+ ['Immune to X','X','The ore carries on normally and doesn\'t get the effect.'],
+ ['X','Immune to X','The ore keeps its effect (and can still die from it) but can\'t get it again once removed.'],
+ ['Fireproof or Wet','Blazing Annihilator','Fireproof / Wet is removed.'],
+ ['Fireproof or Wet','Frostbite','The ore gets frostbite.'],
+ ['Fireproof or Wet','Fireproof or Wet','They don\'t stack: Wet blocks Fireproof and Fireproof blocks Wet.'],
+ ['Frostbite','Fireproof or Wet','The ore keeps its frostbite.'],
+ ['Frostbite','Fire','Frostbite is replaced by fire (unless the ore was Fireproof/Wet first).'],
+ ['Smoking','Poison','Both can be on the same ore.'],
+ ['Fire','Stasis','The ore isn\'t held in place and the fire isn\'t put out.'],
+ ['Education or Draedon','Upgraders','The ore is destroyed unless the timer has finished (0-counter upgraders are safe).'],
+ ['Shield','Blaster','The first blaster after gaining a shield always upgrades and never destroys.'],
+]
+function fxText(name,cls){
+ const letters=[...name].map((ch,i)=>`<span style="--i:${i}">${ch===' '?'&nbsp;':esc(ch)}</span>`).join('')
+ return `<span class="fx ${cls}" data-text="${esc(name)}" aria-label="${esc(name)}">${letters}</span>`
+}
+let stFilter='All'
+function stItemsMatching(re,limit=14){
+ if(!re||!WIKI.length)return {list:[],total:0}
+ const hits=WIKI.filter(w=>!w.gone&&re.test((w.e||'')+' '+(w.d||'')))
+ return {list:hits.slice(0,limit),total:hits.length}
+}
+function stChip(name){const w=WIKI_BY.get(wikiNorm(name));return `<span class="cr-chip">${crItem(w?.n||name)}</span>`}
+function renderStatus(){
+ const q=$('st-search').value.trim().toLowerCase()
+ const list=STATUS.filter(s=>(stFilter==='All'||s[1]===stFilter)&&(!q||s.slice(0,8).join(' ').toLowerCase().includes(q)))
+ $('st-cards').innerHTML=list.map(([name,group,cls,destr,what,example,remove,notes,giveRe,clearRe])=>{
+  const gives=stItemsMatching(giveRe),clears=stItemsMatching(clearRe,10)
+  const ex=WIKI_BY.get(wikiNorm(example))
+  return `<article class="st-card st-${group.toLowerCase()}">
+   <div class="st-head">${fxText(name,cls)}<span class="spacer"></span><span class="st-group">${esc(group)}</span>${destr===true?'<span class="st-tag bad">Destroys ore</span>':destr===false?'<span class="st-tag ok">Safe</span>':''}</div>
+   <div class="st-body">
+    <div class="st-row"><b>What it does</b><span>${esc(what)}</span></div>
+    <div class="st-row"><b>Example item</b><span>${stChip(example)}${ex?.e?`<span class="st-sub">${esc(ex.e.slice(0,140))}${ex.e.length>140?'…':''}</span>`:''}</span></div>
+    <div class="st-row"><b>How to remove</b><span>${remove?esc(remove):'<span style="color:var(--muted)">No known way</span>'}${clears.total?`<span class="st-chips">${clears.list.map(w=>stChip(w.n)).join('')}</span>`:''}</span></div>
+    ${notes?`<div class="st-row"><b>Notes</b><span>${esc(notes)}</span></div>`:''}
+    ${gives.total?`<details class="st-more"><summary>Items that mention ${esc(name)} (${gives.total})</summary><div class="st-chips">${gives.list.map(w=>stChip(w.n)).join('')}${gives.total>gives.list.length?`<span class="st-sub">+${gives.total-gives.list.length} more in the Items tab (search "${esc(name.toLowerCase())}")</span>`:''}</div></details>`:''}
+   </div></article>`}).join('')||'<div class="ms-empty">No status effect matches.</div>'
+ $('st-reactions').innerHTML=STATUS_REACTIONS.map(([a,b,c])=>`<tr><td>${esc(a)}</td><td>${esc(b)}</td><td>${esc(c)}</td></tr>`).join('')
+ document.querySelectorAll('#st-filters button').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.g===stFilter)))
+}
+$('st-search').addEventListener('input',renderStatus)
+$('st-filters').addEventListener('click',ev=>{const b=ev.target.closest('button[data-g]');if(!b)return;stFilter=b.dataset.g;renderStatus()})
+$('tab-status').onclick=()=>showTab('status')
+
 /* ---------- start ---------- */
 const savedData=storage.get(DATA_KEY)
 if(savedData?.items?.length)useData(savedData,true);else useData(BUILTIN,false)
@@ -2279,9 +2471,8 @@ renderCodes()
 loadSuffixes()
 renderCrafting()
 itInit();renderItems()
+renderStatus()
 showTab(TAB_NAMES.includes(storage.get(TAB_KEY))?storage.get(TAB_KEY):'calc')
 </script>
 </body>
 </html>
-
-
