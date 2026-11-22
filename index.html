@@ -902,7 +902,23 @@ function useData(d,custom){
 /* ---------- wiki catalogue (every item from the Miner's Haven wiki) ---------- */
 let WIKI=[],WIKI_BY=new Map(),WIKI_ADDED=0
 const wikiNorm=s=>String(s).toLowerCase().replace(/&/g,'and').replace(/[^a-z0-9]/g,'')
-const wikiImg=f=>f?'https://minershaven.fandom.com/wiki/Special:FilePath/'+encodeURIComponent(f):''
+const WIKI_FILE='https://minershaven.fandom.com/wiki/Special:FilePath/'
+const wikiImg=f=>f?WIKI_FILE+encodeURIComponent(f)+'?width=48':''
+// icon for any item name: the wiki's own image file (loaded live from the wiki), falling back to the item's stored image link
+function wikiEntryFor(name){
+ if(!name||!WIKI_BY.size)return null
+ const tries=[name,String(name).replace(/\s*\([^)]*\)\s*$/,''),String(name).replace(/^(Renegade|Shiny|Sage|Advanced|Cyber)\s+/i,''),String(name).replace(/\s+Upgrade \d+$/,'')]
+ for(const n of tries){const w=WIKI_BY.get(wikiNorm(n));if(w)return w}
+ return null
+}
+function iconUrls(c){
+ const out=[],w=wikiEntryFor(c.name)
+ if(w?.img)out.push(wikiImg(w.img))
+ try{const u=new URL(c.imageUrl);if(u.protocol==='https:'&&!out.includes(u.href))out.push(u.href)}catch{}
+ if(!out.length&&c.name)out.push(WIKI_FILE+encodeURIComponent(String(c.name).replace(/\s*\([^)]*\)\s*$/,'')+'.png')+'?width=48')
+ return out
+}
+function iconFail(img){const alt=(img.dataset.alt||'').split('\n').filter(Boolean);if(alt.length){img.dataset.alt=alt.slice(1).join('\n');img.src=alt[0]}else img.replaceWith(Object.assign(document.createElement('span'),{className:'miss',textContent:'?'}))}
 const wikiUrl=n=>'https://minershaven.fandom.com/wiki/'+encodeURIComponent(String(n).replace(/ /g,'_'))
 function mergeWikiItems(){
  WIKI=(BUILTIN.wiki&&BUILTIN.wiki.items)||[]
@@ -933,9 +949,9 @@ function originIcon(c){
  return `<span class="origin-icon" title="${esc(t.map(x=>x.description||x.label).join(', '))}"><img src="${first.image}" alt=""></span>`
 }
 function thumb(c){
- let src='';try{const u=new URL(c.imageUrl);if(u.protocol==='https:')src=u.href}catch{}
- if(!src)return '<span class="thumb"><span class="miss">?</span></span>'
- return `<span class="thumb"><img src="${esc(src)}" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.replaceWith(Object.assign(document.createElement('span'),{className:'miss',textContent:'?'}))"></span>`
+ const urls=iconUrls(c||{})
+ if(!urls.length)return '<span class="thumb"><span class="miss">?</span></span>'
+ return `<span class="thumb"><img src="${esc(urls[0])}" data-alt="${esc(urls.slice(1).join('\n'))}" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="iconFail(this)"></span>`
 }
 function componentLine(c,label,link=true){
  const name=label??c.name
@@ -2140,7 +2156,7 @@ let crHave=storage.get(CR_KEY)||{}
 function crItem(n,opts={}){
  const t=crTier(n),comp=[...SB_COMPONENTS.values()].find(c=>c.name.toLowerCase()===n.toLowerCase())
  const url=comp?.wikiUrl||wikiUrl(n)
- return `<span class="cr-item">${t?badge(t):''}<a href="${esc(url)}" target="_blank" rel="noopener noreferrer">${esc(n)}</a>${SUPERS.has(n)&&opts.flagSuper?' <span class="cr-flag" title="Superstitious: you need to craft this one first">needs Superstitious</span>':''}</span>`
+ return `<span class="cr-item">${t?badge(t):''}${thumb({name:n,imageUrl:comp?.imageUrl})}<a href="${esc(url)}" target="_blank" rel="noopener noreferrer">${esc(n)}</a>${SUPERS.has(n)&&opts.flagSuper?' <span class="cr-flag" title="Superstitious: you need to craft this one first">needs Superstitious</span>':''}</span>`
 }
 function crHow(n){
  const r=CR_RECIPES[n]
