@@ -247,7 +247,43 @@ tbody tr:nth-child(odd) td{background:#333}
 .sx-table .notes{color:var(--muted);font-size:12px}
 .sx-copy{min-height:0;padding:0 6px;margin-left:6px;font-size:11px}
 .sx-summary input{font-size:inherit}
+.cr-steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:8px 14px;line-height:1.5}
+.cr-cats{display:grid;grid-template-columns:repeat(auto-fill,minmax(440px,1fr));gap:10px}
+.cr-card{border:1px solid #535353;background:#333}
+.cr-card.done{border-color:#5cbe5c}
+.cr-head{display:flex;flex-wrap:wrap;align-items:center;gap:6px 8px;padding:5px 8px;background:#3d3d3d;border-bottom:1px solid #4a4a4a}
+.cr-cat{font-weight:600;color:#eee}
+.cr-arrow{color:var(--muted)}
+.cr-head .spacer{flex:1}
+.cr-life{font-size:11px;color:#fdcb58;border:1px solid #6a5a30;padding:0 5px;border-radius:7px}
+.cr-prog{font-size:11px;color:var(--muted)}
+.cr-card.done .cr-prog{color:#5cbe5c;font-weight:600}
+.cr-deity{padding:2px 8px;color:var(--muted);font-size:12px;font-style:italic}
+.cr-items td{padding:2px 6px;vertical-align:middle}
+.cr-items td:first-child{width:26px}
+.cr-how{color:#cfcfcf;font-size:12px}
+.cr-item{display:inline-flex;align-items:center;gap:5px}
+.cr-item .tier-badge{width:auto;min-width:70px;font-size:11px;padding:0 4px}
+.cr-flag{font-size:10px;color:#d36868;border:1px solid #7a3f3f;padding:0 4px;border-radius:6px}
+.cr-note{color:#fdcb58;cursor:help}
+.cr-foot{padding:4px 8px;color:#fdcb58;font-size:12px;border-top:1px solid #444}
+.cr-lookup{width:100%;border-radius:0;min-height:calc(var(--line-height) + 9px);margin-bottom:8px}
+.cr-lookup-out{display:grid;gap:6px;max-height:420px;overflow:auto}
+.cr-hit{border:1px solid #4a4a4a;background:#333;padding:5px 8px}
+.cr-hit ul{margin:4px 0 0;padding-left:18px;color:#cfcfcf;font-size:12px}
+.cr-verdict{margin-left:6px}
+.cr-verdict.ok{color:#5cbe5c;border-color:#5cbe5c;background:#2c3d30}
+.cr-verdict.bad{color:#ff8a8a;border-color:#a04848;background:#3d2c2c}
+.cr-verdict.maybe{color:#fdcb58;border-color:#fdcb58;background:#3d3628}
+.cr-verdict.info{color:#aac4ff;border-color:#55657a;background:#2c3340}
+.cr-shard-table td,.cr-shard-table th{text-align:center;padding:2px 6px;font-size:12px}
+.cr-rules{margin:8px 0;padding-left:18px;line-height:1.6}
+.cr-free{display:flex;flex-wrap:wrap;gap:4px;max-height:420px;overflow:auto}
+.cr-chip{background:#2e2e2e;border:1px solid #444;padding:1px 6px}
 @media (max-width:760px){
+ .cr-cats{grid-template-columns:1fr}
+ .cr-item .tier-badge{min-width:0}
+
  .topbar{flex-wrap:wrap}
  .summary,.summary tbody{display:block;width:100%}
  .summary colgroup,.summary thead{display:none}
@@ -286,7 +322,7 @@ tbody tr:nth-child(odd) td{background:#333}
 </head>
 <body>
 <header class="topbar">
- <nav class="tabs" role="tablist" aria-label="Pages"><button type="button" class="tab" role="tab" id="tab-calc" aria-controls="page-calc" aria-selected="true">Calculator</button><button type="button" class="tab" role="tab" id="tab-rebirth" aria-controls="page-rebirth" aria-selected="false" tabindex="-1">Rebirth</button><button type="button" class="tab" role="tab" id="tab-platforms" aria-controls="page-platforms" aria-selected="false" tabindex="-1">Platforms</button><button type="button" class="tab" role="tab" id="tab-builder" aria-controls="page-builder" aria-selected="false" tabindex="-1">Setup Builder</button><button type="button" class="tab" role="tab" id="tab-codes" aria-controls="page-codes" aria-selected="false" tabindex="-1">Codes</button><button type="button" class="tab" role="tab" id="tab-suffixes" aria-controls="page-suffixes" aria-selected="false" tabindex="-1">Cash Suffixes</button></nav>
+ <nav class="tabs" role="tablist" aria-label="Pages"><button type="button" class="tab" role="tab" id="tab-calc" aria-controls="page-calc" aria-selected="true">Calculator</button><button type="button" class="tab" role="tab" id="tab-rebirth" aria-controls="page-rebirth" aria-selected="false" tabindex="-1">Rebirth</button><button type="button" class="tab" role="tab" id="tab-platforms" aria-controls="page-platforms" aria-selected="false" tabindex="-1">Platforms</button><button type="button" class="tab" role="tab" id="tab-builder" aria-controls="page-builder" aria-selected="false" tabindex="-1">Setup Builder</button><button type="button" class="tab" role="tab" id="tab-codes" aria-controls="page-codes" aria-selected="false" tabindex="-1">Codes</button><button type="button" class="tab" role="tab" id="tab-suffixes" aria-controls="page-suffixes" aria-selected="false" tabindex="-1">Cash Suffixes</button><button type="button" class="tab" role="tab" id="tab-crafting" aria-controls="page-crafting" aria-selected="false" tabindex="-1">Crafting</button></nav>
  <div class="top-right">
   <span id="data-status"></span>
   <button type="button" class="icon-btn" id="load-btn" title="Read item data from an updated copy of the MPU site's index.html">
@@ -663,6 +699,73 @@ tbody tr:nth-child(odd) td{background:#333}
  </section>
  <p class="note">Each suffix is 1,000× the one before it. Suffixes are matched without caring about capitals in the converter, but the in-game names use the capitals shown. "Rebirth price at lives" shows which lives' rebirth price falls in that suffix; it's capped at 10 NVSPTGNTL from life 80,351. Ooftopian × is the Ooftopian Refiner's multiplier for ore worth that suffix (1.5× per suffix, capped at 150×). Data: the MPU site's suffix list.</p>
 </div>
+
+<div id="page-crafting" role="tabpanel" aria-labelledby="tab-crafting" hidden>
+ <section class="panel" aria-labelledby="cr-how-title">
+  <div class="panel-title" id="cr-how-title">How Superstitious Crafting Works</div>
+  <div class="panel-body cr-steps">
+   <div><b>1. Unlock it.</b> Do the Second Sacrifice, reach life S+1,000, then talk to Draedon in the Sporest (past John Doe's cave) to get the <b>True Book of Knowledge</b>.</div>
+   <div><b>2. Get a catalyst.</b> Place the True Book of Knowledge and that catalyst's <b>five items</b> on your base and rebirth. About a <b>30–33% chance</b> per rebirth to get the catalyst. These items are <b>not used up</b>, and other items on your base don't matter.</div>
+   <div><b>3. Craft at Draedon.</b> Bring the catalyst to Draedon and add <b>Reborn items</b> until you reach the item's amount of six elements: Aether, Water, Earth, Fire, Order and Entropy. The catalyst and those reborns <b>are used up</b>. Shiny versions work too.</div>
+  </div>
+ </section>
+
+ <section class="panel" aria-labelledby="cr-cat-title">
+  <div class="panel-title" id="cr-cat-title">Catalysts: What to Put on Your Base</div>
+  <div class="ms-tools" style="grid-template-columns:1fr"><input type="search" id="cr-search" placeholder="Search a catalyst, Superstitious item or ingredient (e.g. Midas, Lightningbolt Refiner)" aria-label="Search catalysts" autocomplete="off"></div>
+  <div class="panel-body"><p class="note" style="margin-top:0">Tick the items you have to track how close you are. "How to get it" shows what each item is crafted from at The Craftsman.</p><div class="cr-cats" id="cr-cats"></div></div>
+ </section>
+
+ <div class="rb-grid">
+  <section class="panel" aria-labelledby="cr-look-title">
+   <div class="panel-title" id="cr-look-title">Can I Salvage This?</div>
+   <div class="panel-body">
+    <input type="search" id="cr-lookup" class="cr-lookup" placeholder="Type an item, e.g. Solar Flare, Dark Magic" aria-label="Item to check" autocomplete="off">
+    <div id="cr-lookup-out" class="cr-lookup-out"></div>
+   </div>
+  </section>
+  <section class="panel" aria-labelledby="cr-salv-title">
+   <div class="panel-title" id="cr-salv-title">Salvaging at The Craftsman</div>
+   <div class="panel-body">
+    <p class="note" style="margin-top:0">The Craftsman turns Reborn and Adv. Reborn items into <b>Shards of Life</b>: <b>27 − the item's rarity</b> (rarity 19 = 8 shards, rarity 1 = 26 shards).</p>
+    <div class="breakdown-wrap"><table class="breakdown cr-shard-table"><tbody><tr><th>Rarity<br>Shards</th><tr id="cr-shards"></tr></tbody></table></div>
+    <ul class="cr-rules">
+     <li><b>Don't salvage Adv. Reborns.</b></li>
+     <li><b>Keep</b> anything in a catalyst chain (see the list below), and check it isn't needed for an Evolved, Fusion or Enchanted item you want.</li>
+     <li>Superstitious items can be crafted from almost any Reborn as element fodder, so keep a stock of common reborns if you plan to craft lots of them.</li>
+    </ul>
+    <div class="sb-subhead">Player picks for "safe to salvage"</div>
+    <table class="breakdown"><tbody id="cr-safe"></tbody></table>
+   </div>
+  </section>
+ </div>
+
+ <div class="rb-grid">
+  <section class="panel" aria-labelledby="cr-keep-title">
+   <div class="panel-title" id="cr-keep-title">Reborns to Keep for Every Catalyst</div>
+   <div class="panel-body">
+    <p class="note" style="margin-top:0">Total base items needed to build every catalyst item once, with sub-recipes worked out. Items you get another way (Enchanted, Ultimate, rebirth-only) aren't counted.</p>
+    <div class="breakdown-wrap" style="max-height:420px;overflow:auto"><table class="breakdown"><thead><tr><th class="numeric">Keep</th><th>Item</th></tr></thead><tbody id="cr-keep"></tbody></table></div>
+   </div>
+  </section>
+  <section class="panel" aria-labelledby="cr-free-title">
+   <div class="panel-title" id="cr-free-title">Reborns Not Needed by Any Known Recipe (<span id="cr-free-count">0</span>)</div>
+   <div class="panel-body">
+    <p class="note" style="margin-top:0">Reborn-tier items from the MPU data that no catalyst, Evolved or Enchanted recipe listed here needs by name. These are the best salvage candidates. Recipes we don't have may still use a few of them, so check the wiki before salvaging lots, and remember any reborn can be element fodder for Superstitious items.</p>
+    <div class="cr-free" id="cr-free"></div>
+   </div>
+  </section>
+ </div>
+
+ <section class="panel" aria-labelledby="cr-elem-title">
+  <div class="panel-title" id="cr-elem-title">Example Element Recipe: Meralin's Sorcery</div>
+  <div class="panel-body">
+   <p class="note" style="margin-top:0">Each Superstitious item needs set amounts of the six elements, and many reborn combinations work. This is the wiki's listed recipe for Meralin's Sorcery (75 each of Water, Earth, Fire, Order and Entropy):</p>
+   <table class="breakdown" style="max-width:420px"><thead><tr><th class="numeric">Qty</th><th>Reborn</th></tr></thead><tbody id="cr-meralin"></tbody></table>
+  </div>
+ </section>
+ <p class="note">Sources: Miner's Haven Wiki pages <a href="https://minershaven.fandom.com/wiki/True_Book_of_Knowledge" target="_blank" rel="noopener noreferrer">True Book of Knowledge</a>, <a href="https://minershaven.fandom.com/wiki/Catalysts" target="_blank" rel="noopener noreferrer">Catalysts</a>, <a href="https://minershaven.fandom.com/wiki/Guide:_Crafting_Superstitious_Items" target="_blank" rel="noopener noreferrer">Guide: Crafting Superstitious Items</a>, <a href="https://minershaven.fandom.com/wiki/The_Craftsman" target="_blank" rel="noopener noreferrer">The Craftsman</a>, <a href="https://minershaven.fandom.com/wiki/Meralin's_Sorcery" target="_blank" rel="noopener noreferrer">Meralin's Sorcery</a>; community "Guide to Reborn Husbandry" and salvaging threads on the wiki discussions; NamuWiki. Recipes can change with updates.</p>
+</div>
 </main>
 <div class="toast" id="toast" role="status" hidden></div>
 
@@ -749,6 +852,7 @@ function useData(d,custom){
  if(typeof renderRebirth==='function'&&rbReady)renderRebirth()
  if(sbReady)refreshBuilderData()
  if(typeof loadSuffixes==='function'&&sbReady)renderSuffixes()
+ if(sbReady)renderCrafting()
 }
 
 /* ---------- rendering helpers ---------- */
@@ -967,7 +1071,7 @@ $('reset-data').onclick=()=>{storage.del(DATA_KEY);useData(BUILTIN,false);state.
 
 
 /* ---------- tabs ---------- */
-const TAB_KEY='mpucalc.tab.v1',TAB_NAMES=['calc','rebirth','platforms','builder','codes','suffixes']
+const TAB_KEY='mpucalc.tab.v1',TAB_NAMES=['calc','rebirth','platforms','builder','codes','suffixes','crafting']
 function showTab(name,focus=false){
  for(const n of TAB_NAMES){
   const on=n===name,tab=$('tab-'+n)
@@ -1810,6 +1914,219 @@ $('sx-body').addEventListener('click',async ev=>{const b=ev.target.closest('.sx-
 function loadSuffixes(){if(sxState.input)$('sx-in').value=sxState.input;$('sx-life').value=sxState.life||(rb.life||'');renderConverter();renderSuffixes()}
 $('tab-suffixes').onclick=()=>showTab('suffixes')
 
+/* ---------- crafting ---------- */
+// Catalysts: [catalyst, superstitious item, deity, life requirement or '', five items on base with the True Book of Knowledge]
+const CATALYSTS=[
+ ['Catalyst of Void',"Daestrophe",'Daegel, God of the Void','',["The Fissure","The Daegelart","Overlord's Telamonster","Eternal Fracture","Void Drive"]],
+ ['Catalyst of Thunder',"Draedon's Gauntlet",'Draedon','S+2,000',["Tempest Refiner","Lightningbolt Predictor","Azure Purifier","Tesla Refuter","Mystical Thunder"]],
+ ['Catalyst of Earth',"Havium Mine",'','',["Yuttrium Mine","Symmetryte Mine","Yuntonium Mine","Solarium Mine","Gargantium Mine"]],
+ ['Catalyst of Fire',"Vulcan's Wrath",'Vulcan','S+3,000',["Igneous Forge","Searing Heat","Spirit of Fire","Firecrystallized System","Vulcan's Destiny"]],
+ ['Catalyst of Fortune',"Midas Blaster",'Sage King, the Fallen King','',["King Gold Mine","Massive Diamond Drill","Sage Justice","Coliseum Catharsis","Sage King"]],
+ ['Catalyst of Power',"Tyrant's Throne",'','',["V-tolite Mine","Tyrant's Forge","Mystical Thunder","Void Drive","Gargantium Core"]],
+ ['Catalyst of Light',"Optic Origin",'Oz, God of Light','S+5,000',["Morning Star","Neutron Star","Catalyzed Star","Ore Nova","Void Star"]],
+ ['Catalyst of the Supreme',"Elysium Solemnity",'','',["True Overlord Device","Aethereal Synthesizer","Final Eclipse Gate","Crystal Altar","Champion Infuser"]],
+ ['Catalyst of Death',"The Death Cap",'Lord of Tenebrous, God of Death','',["Dreamer's Blight","Deadly Spore","Azure Spore","Delta Phantom","Lord of Tenebrous"]],
+ ['Catalyst of Nature',"Garden of Gaia",'Gaia, Goddess of Nature','S+2,000',["Gaia's Grasp","Dreamer's Life","Frozen Peaks","Ambrosia Garden","Deadly Spore"]],
+ ['Catalyst of Spirits',"Delta Phantom",'Delta Phantom, Demigod of Spirits','',["Eternal Limbo","Brimstone Spires","Dark Illuminator","Forbidden Magic","Anguished Guardian of the Gate"]],
+ ['Catalyst of Knowledge',"Enchanted Library",'Magnar, God of Knowledge','S+1,000',["Book of Knowledge","Stardust Illuminator","Statue of Knowledge","Ore Indoctrinator","Ancient Coliseum"]],
+ ['Catalyst of Destruction',"Pandora's Box",'Pandora, Goddess of Destruction','S+2,000',["Dreamer's Blight","Dreamer's Valor","Dreamer's Nightmare","Dreamer's Terror","Devourer of Nightmares"]],
+ ['Catalyst of Space',"Ore Hypernova",'Aurora, Goddess of Space','S+10,000',["Optic Origin","Blue Supergiant","Aurora Borealis","Stardust Pulsar","Stellarite Mine"]],
+ ['Catalyst of Time',"The Hourglass",'Kronos, Titan of Time','S+5,000',["Grandfather Clockwork","Interstellar Conqueror","Temporal Enchantment","Temporal Armageddon","The Trinity"]],
+ ['Catalyst of Blood Magic',"Swag City",'Lucifer, God of Blood Magic','',["Draconicglass Mine","Azure Purifier","Dreamer's Nightmare","Funky Town","Devil's Spore"]],
+ ['Catalyst of Necromancy',"Methuselah's Mask",'Methuselah, Demigod of Necromancy','',["The Death Cap","Lord of Tenebrous","Castle Bravo","Tsar Bomba","Son of Poison"]],
+ ['Catalyst of Magic',"Meralin's Sorcery",'Meralin, God of Magic','',["Forbidden Magic","Mystical Thunder","Swag City","Methuselah's Mask","Soul Blossom"],'Fifth item from NamuWiki (translated); check it in-game'],
+ ['Catalyst of Oblivion',"The Heart of Void",'','S+2,000',["Daestrophe","Void Star","Devourer of Nightmares","Oblivion Emission","The Forbidden Tome"]],
+ ['Catalyst of Chaos',"SpookApocalypse-Ω",'Loki, God of Chaos','',["Conqueror's Delusion"],'Limited (Halloween 2025). Only Conqueror\'s Delusion is confirmed; the other four items weren\'t available']
+]
+// How to get the required items: [qty, ingredient] lists, or a text source. qty per ONE crafted item.
+const RECIPES={
+ "The Fissure":[[10,"The Fracture"]],
+ "The Daegelart":[[10,"The Abomination"]],
+ "Eternal Fracture":[[6,"Eternal Journey"],[3,"The Fracture"]],
+ "Void Drive":[[1,"Eternal Limbo"],[10,"Overlord Device"],[1,"Hydra Blaster"],[1,"Void Star"],[1,"Overlord's Telamonster"]],
+ "Tempest Refiner":[[20,"Lightningbolt Refiner"]],
+ "Lightningbolt Predictor":[[6,"Lightningbolt Refiner"],[3,"Astral Predictor"]],
+ "Azure Purifier":[[9,"Azure Refiner"]],
+ "Mystical Thunder":[[8,"Arcane Lightning"]],
+ "Tesla Refuter":[[10,"Tesla Resetter"]],
+ "Eternal Limbo":[[20,"Eternal Journey"]],
+ "Brimstone Spires":[[10,"Hades Palace"]],
+ "Dark Illuminator":[[4,"Ore Illuminator"],[8,"Dark Magic"]],
+ "Forbidden Magic":[[12,"Dark Magic"]],
+ "Anguished Guardian of the Gate":[[4,"Dreamer's Anguish"],[8,"Guardian of the Gate"]],
+ "Neutron Star":[[10,"Red Giant"]],
+ "Catalyzed Star":[[10,"The Catalyst"],[5,"Morning Star"]],
+ "Ore Nova":[[3,"Nova Star"],[6,"Stardust Pulsar"]],
+ "Void Star":[[10,"Black Dwarf"]],
+ "Final Eclipse Gate":[[10,"Gate of Eclipse"]],
+ "Crystal Altar":[[5,"Crystal Shrine"]],
+ "Aethereal Synthesizer":[[15,"Aether Refinery"]],
+ "Champion Infuser":[[20,"Haste Infuser"],[1,"Resetting Infuser"],[20,"Cursed Infuser"],[20,"Heavenly Infuser"],[2,"Zenith Will"],[5,"Glow Infuser"],[20,"Speed Infuser"],[20,"Infinite Infuser"],[1750,"Shards of Life"]],
+ "Searing Heat":[[8,"Scorching Heat"]],
+ "Firecrystallized System":[[4,"Industrial Firecrystal Mine"],[8,"Crystallized System"]],
+ "Vulcan's Destiny":[[6,"Vulcan's Grasp"]],
+ "Gaia's Grasp":[[20,"Nature's Grip"]],
+ "Aurora Borealis":[[5,"Northern Light"]],
+ "Stardust Illuminator":[[2,"Ore Illuminator"],[4,"Stardust Pulsar"]],
+ "Ore Indoctrinator":[[66,"Ore Illuminator"]],
+ "Ancient Coliseum":[[10,"Ancient Temple"]],
+ "Grandfather Clockwork":[[11,"Clockwork"]],
+ "Temporal Enchantment":[[25,"Timeless Enchantment"]],
+ "Temporal Armageddon":[[30,"Fractured Reality"]],
+ "Lord of Tenebrous":[[10,"Sword God Shrine"]],
+ "Castle Bravo":[[25,"Big Alberto"]],
+ "Tsar Bomba":[[100,"Big Bertha"]],
+ "Devil's Spore":[[15,"Vampire Spore"]],
+ "Draconicglass Mine":[[15,"Dragonglass Mine"]],
+ "Sage King":[[12,"Sage Redeemer"]],
+ "Dreamer's Nightmare":[[7,"Dreamer's Anguish"]],
+ "Dreamer's Terror":[[50,"Dreamer's Fright"]],
+}
+const RECIPE_NOTES={"Aethereal Synthesizer":'Community guides list 15 or 30 Aether Refinery','Temporal Armageddon':'Was 50 Fractured Reality at release; current guides say 30'}
+const SOURCES={
+ "Overlord's Telamonster":'Ultimate: rebirth with at least $1 CENT',
+ "True Overlord Device":'Ultimate: rebirth with at least $1 tsTG',
+ "Igneous Forge":'Adv. Reborn: rebirth at life 1,000+',
+ "Spirit of Fire":'Adv. Reborn: rebirth at life 3,000+',
+ "Dreamer's Blight":'Adv. Reborn: rebirth at life 2,000+',
+ "Statue of Knowledge":'Fabled: earned by helping another player do their first rebirth',
+ "Book of Knowledge":'Enchanted: crafted at The Craftsman',
+ "Devourer of Nightmares":'Enchanted: crafted at The Craftsman',
+ "Dreamer's Life":'Enchanted: crafted at The Craftsman',
+ "Gargantium Core":'Enchanted: crafted at The Craftsman',
+ "The Forbidden Tome":'Found in the Void (reached through a portal opened with Eternal Limbo)',
+ "Shards of Life":'Currency from rebirth skips and salvaging',
+}
+const SUPERS=new Set(CATALYSTS.map(c=>c[1]))
+// Community advice
+const SALVAGE_SAFE=[
+ ['Solar Flare','Not needed by name for anything (only as Superstitious element fodder)'],
+ ['Plasma Scanner','Only useful once per ore; not needed by name in any catalyst chain'],
+ ['Mineral Wheel','Keep about 2; it doesn\'t craft into anything'],
+ ['Newtonium Corroder','Called "basically useless" by players'],
+ ['Vortex Chamber','Mostly useless, but a few Enchanted recipes use it: check first'],
+]
+// other crafts (Evolved / Enchanted chains) that use reborns, from the community "Guide to Reborn Husbandry"
+const OTHER_RECIPES={
+ "Diamond Breech Loader":[[10,"Massive Diamond Mine"],[5,"Breech Loader"]],
+ "Phasecursor Mine":[[6,"Precursor Mine"],[3,"Phase Refiner"]],
+ "Banana Sundae Refiner":[[7,"Banana Split Upgrader"]],
+ "Green Tea Kettle":[[7,"Green Tea Latte"]],
+ "Universal Collapse":[[50,"Fractured Reality"]],
+}
+const OTHER_USES={
+ "Turtle Dignifier":'Gives ore a shield for Midas / blasters (see Setup Builder)',
+ "Tortoise Fortifier":'Gives ore 3 shields for Midas / blasters (see Setup Builder)',
+ "Quantum Ore Cleaner":'Players say it\'s in many recipes (Superstitious element recipes and an Enchanted item)',
+ "Meatball Sandwich":'Listed as needed for Enchanted items in the community guide',
+ "Toxic Waste Disposal":'Common element fodder in Pandora\'s Box and Daestrophe recipes',
+}
+const MERALIN_RECIPE=[[23,'The Catalyst'],[15,'Green Tea Latte'],[8,"Nature's Grip"],[6,'Wild Spore'],[4,"Dreamer's Fright"],[3,'Newtonium Mine']]
+
+/* derived data */
+let CR_TIER=new Map(),CR_NAME=new Map()
+function crBuildTiers(){
+ CR_TIER=new Map();CR_NAME=new Map()
+ const add=(n,t)=>{if(!n)return;const k=n.toLowerCase();if(!CR_NAME.has(k)||/[A-Z]/.test(n))CR_NAME.set(k,n);if(t&&!CR_TIER.has(k))CR_TIER.set(k,t)}
+ // tiers from the wiki's Superstitious Requirement list (items not in the MPU data)
+ const req={"The Fissure":'Evolved Reborn',"The Daegelart":'Evolved Reborn',"Eternal Fracture":'Reborn Fusion',"Tempest Refiner":'Evolved Reborn',"Lightningbolt Predictor":'Reborn Fusion',"Azure Purifier":'Evolved Reborn',"Tesla Refuter":'Evolved Reborn',"Mystical Thunder":'Adv. Evolution',"Igneous Forge":'Adv. Reborn',"Searing Heat":'Evolved Reborn',"Spirit of Fire":'Adv. Reborn',"Firecrystallized System":'Reborn Fusion',"Dreamer's Blight":'Adv. Reborn',"Eternal Limbo":'Evolved Reborn',"Brimstone Spires":'Adv. Evolution',"Dark Illuminator":'Reborn Fusion',"Forbidden Magic":'Evolved Reborn',"Anguished Guardian of the Gate":'Reborn Fusion',"Aethereal Synthesizer":'Evolved Reborn',"Final Eclipse Gate":'Evolved Reborn',"Crystal Altar":'Adv. Evolution',"Devil's Spore":'Adv. Evolution'}
+ for(const [n,tier] of Object.entries(req))add(n,tier)
+ for(const it of ITEMS)for(const c of it.components||[])add(c.name,c.tier)
+ for(const r of (sbData('resetters')||[]))add(r.name.replace(/ \(Max\)$/,''),r.tier)
+ for(const p of (sbData('portables')||[]))add(p.name.replace(/ \((Mortar|Tesla|Flamethrower|Chainsaw|Eyes|Leaves)\)$/,'').replace(/ Upgrade \d+$/,''),p.tier)
+ for(const s of SUPERS)add(s,'Superstitious')
+ const manual={"Overlord's Telamonster":'Ultimate',"True Overlord Device":'Ultimate',"Statue of Knowledge":'Fabled',"Book of Knowledge":'Enchanted',"Devourer of Nightmares":'Enchanted',"Dreamer's Life":'Enchanted',"Gargantium Core":'Enchanted',"Void Drive":'Enchanted',"The Forbidden Tome":'Ultimate'}
+ for(const [n,t] of Object.entries(manual))add(n,t)
+ for(const [,,,,items] of CATALYSTS)for(const n of items)add(n)
+ for(const [o,ing] of Object.entries(RECIPES)){add(o);if(Array.isArray(ing))for(const [,n] of ing)add(n)}
+ for(const [n] of SALVAGE_SAFE)add(n)
+ for(const [o,ing] of Object.entries(OTHER_RECIPES)){add(o);for(const [,n] of ing)add(n)}
+ for(const n of Object.keys(OTHER_USES))add(n)
+}
+const crTier=n=>CR_TIER.get(String(n).toLowerCase())||''
+// where each item is used
+function crUsage(){
+ const used=new Map(),add=(n,how)=>{const k=n.toLowerCase();if(!used.has(k))used.set(k,{name:n,uses:[]});used.get(k).uses.push(how)}
+ for(const [cat,sup,,,items] of CATALYSTS)for(const it of items)add(it,{type:'catalyst',text:`On base for ${cat} → ${sup}`})
+ for(const [out,ing] of Object.entries(RECIPES))if(Array.isArray(ing))for(const [q,n] of ing)if(n!=='Shards of Life')add(n,{type:'craft',text:`${q} needed to craft ${out}`,qty:q,out})
+ for(const [out,ing] of Object.entries(OTHER_RECIPES))for(const [q,n] of ing)add(n,{type:'craft',text:`${q} needed to craft ${out} (Evolved / Enchanted chain)`})
+ for(const [n,why] of Object.entries(OTHER_USES))add(n,{type:'craft',text:why})
+ for(const [q,n] of MERALIN_RECIPE)add(n,{type:'element',text:`Element fodder in one Meralin's Sorcery recipe (${q})`})
+ for(const [n,why] of SALVAGE_SAFE)add(n,{type:'safe',text:'Players: '+why})
+ return used
+}
+// total base reborns needed to build each catalyst item once (expanding sub-recipes)
+function crKeepTotals(){
+ const need=new Map(),seen=new Set()
+ const expand=(name,mult)=>{const r=RECIPES[name];if(Array.isArray(r)){for(const [q,n] of r){if(n==='Shards of Life')continue;expand(n,q*mult)}}else{const k=name.toLowerCase();need.set(k,{name,qty:(need.get(k)?.qty||0)+mult})}}
+ for(const [,,,,items] of CATALYSTS)for(const it of items){if(seen.has(it))continue;seen.add(it);expand(it,1)}
+ return [...need.values()]
+}
+/* rendering */
+const CR_KEY='mpucalc.crafting.v1'
+let crHave=storage.get(CR_KEY)||{}
+function crItem(n,opts={}){
+ const t=crTier(n),comp=[...SB_COMPONENTS.values()].find(c=>c.name.toLowerCase()===n.toLowerCase())
+ const url=comp?.wikiUrl||'https://minershaven.fandom.com/wiki/'+encodeURIComponent(n.replace(/ /g,'_'))
+ return `<span class="cr-item">${t?badge(t):''}<a href="${esc(url)}" target="_blank" rel="noopener noreferrer">${esc(n)}</a>${SUPERS.has(n)&&opts.flagSuper?' <span class="cr-flag" title="Superstitious: you need to craft this one first">needs Superstitious</span>':''}</span>`
+}
+function crHow(n){
+ const r=RECIPES[n]
+ if(Array.isArray(r))return r.map(([q,i])=>`${q.toLocaleString('en-US')}× ${esc(i)}`).join(' + ')+(RECIPE_NOTES[n]?` <span class="cr-note" title="${esc(RECIPE_NOTES[n])}">⚠</span>`:'')
+ if(typeof r==='string')return esc(r)
+ if(SOURCES[n])return esc(SOURCES[n])
+ if(SUPERS.has(n))return `Superstitious: craft with ${esc(CATALYSTS.find(c=>c[1]===n)[0])}`
+ const t=crTier(n)
+ return t==='Reborn'||t==='Adv. Reborn'?`${esc(t)}: from rebirths`:t?esc(t):'<span style="color:var(--muted)">see wiki</span>'
+}
+function renderCatalysts(){
+ const q=$('cr-search').value.trim().toLowerCase()
+ const list=CATALYSTS.filter(c=>!q||[c[0],c[1],c[2],...c[4],...c[4].flatMap(i=>Array.isArray(RECIPES[i])?RECIPES[i].map(x=>x[1]):[])].some(s=>s.toLowerCase().includes(q)))
+ $('cr-cats').innerHTML=list.map(([cat,sup,deity,life,items,note])=>{
+  const have=items.filter(i=>crHave[cat+'|'+i]).length
+  return `<div class="cr-card${have===items.length&&items.length===5?' done':''}">
+   <div class="cr-head"><span class="cr-cat">${esc(cat)}</span><span class="cr-arrow">→</span>${crItem(sup)}<span class="spacer"></span>${life?`<span class="cr-life">Life ${esc(life)}</span>`:''}<span class="cr-prog">${have}/${items.length===5?5:'5'} on base</span></div>
+   ${deity?`<div class="cr-deity">${esc(deity)}</div>`:''}
+   <table class="breakdown cr-items"><tbody>${items.map(i=>`<tr><td class="center"><input type="checkbox" class="cd-box" data-k="${esc(cat+'|'+i)}" ${crHave[cat+'|'+i]?'checked':''} aria-label="I have ${esc(i)}"></td><td>${crItem(i,{flagSuper:true})}</td><td class="cr-how">${crHow(i)}</td></tr>`).join('')}${items.length<5?`<tr><td></td><td colspan="2" style="color:var(--muted)">${5-items.length} more item${5-items.length===1?'':'s'} not known</td></tr>`:''}</tbody></table>
+   ${note?`<div class="cr-foot">⚠ ${esc(note)}</div>`:''}
+  </div>`}).join('')||'<div class="ms-empty">No catalyst matches.</div>'
+}
+$('cr-cats').addEventListener('change',ev=>{const b=ev.target.closest('.cd-box');if(!b)return;if(b.checked)crHave[b.dataset.k]=true;else delete crHave[b.dataset.k];storage.set(CR_KEY,crHave);renderCatalysts()})
+$('cr-search').addEventListener('input',renderCatalysts)
+function renderLookup(){
+ const q=$('cr-lookup').value.trim().toLowerCase(),out=$('cr-lookup-out')
+ if(!q){out.innerHTML='<span style="color:var(--muted)">Type an item name to see if it\'s needed for crafting.</span>';return}
+ const usage=crUsage(),names=new Set([...usage.keys(),...CR_TIER.keys()])
+ const hits=[...names].filter(n=>n.includes(q)).sort((a,b)=>(a.startsWith(q)?0:1)-(b.startsWith(q)?0:1)||a.localeCompare(b)).slice(0,12)
+ if(!hits.length){out.innerHTML='<span style="color:var(--muted)">No item with that name in the data.</span>';return}
+ out.innerHTML=hits.map(k=>{
+  const u=usage.get(k),name=u?.name||CR_NAME.get(k)||k,t=crTier(name)
+  let verdict,cls
+  if(u&&u.uses.some(x=>x.type==='catalyst'||x.type==='craft')){verdict='Keep: needed for crafting';cls='bad'}
+  else if(u&&u.uses.some(x=>x.type==='safe')){verdict='Players say it\'s safe to salvage';cls='ok'}
+  else if(t==='Adv. Reborn'){verdict='Keep: Adv. Reborns shouldn\'t be salvaged';cls='bad'}
+  else if(u){verdict='Probably safe: only used as element fodder';cls='maybe'}
+  else if(!t&&!SB_COMPONENTS.size){verdict='Unknown';cls='info'}
+  else if(t==='Reborn'){verdict='Not in any catalyst chain: likely safe to salvage';cls='ok'}
+  else{verdict='Not a reborn: can\'t be salvaged at The Craftsman';cls='info'}
+  return `<div class="cr-hit"><div>${crItem(name)} <span class="cd-badge ${cls==='bad'?'maybe':cls==='ok'?'ok':''} cr-verdict ${cls}">${esc(verdict)}</span></div>${u?`<ul>${u.uses.map(x=>`<li>${esc(x.text)}</li>`).join('')}</ul>`:''}</div>`}).join('')
+}
+$('cr-lookup').addEventListener('input',renderLookup)
+function renderSalvage(){
+ const keep=crKeepTotals().filter(x=>x.name!=='Shards of Life').sort((a,b)=>b.qty-a.qty||a.name.localeCompare(b.name))
+ $('cr-keep').innerHTML=keep.map(k=>`<tr><td class="numeric"><b>${k.qty.toLocaleString('en-US')}</b></td><td>${crItem(k.name)}</td></tr>`).join('')
+ const usage=crUsage()
+ const reborns=[...new Set([...CR_TIER.entries()].filter(([,t])=>t==='Reborn').map(([k])=>k))].filter(k=>!usage.has(k)).map(k=>CR_NAME.get(k)||k).sort((a,b)=>a.localeCompare(b))
+ $('cr-free').innerHTML=reborns.length?reborns.map(n=>`<span class="cr-chip">${crItem(n)}</span>`).join(''):'<span style="color:var(--muted)">None found.</span>'
+ $('cr-free-count').textContent=reborns.length
+ $('cr-safe').innerHTML=SALVAGE_SAFE.map(([n,why])=>`<tr><td>${crItem(n)}</td><td>${esc(why)}</td></tr>`).join('')
+ $('cr-meralin').innerHTML=MERALIN_RECIPE.map(([q,n])=>`<tr><td class="numeric"><b>${q}</b></td><td>${crItem(n)}</td></tr>`).join('')
+ const shards=$('cr-shards')
+ if(!shards.dataset.ready){shards.dataset.ready=1;shards.innerHTML=Array.from({length:19},(_,i)=>i+1).map(r=>`<td><b>${r}</b><br>${27-r}</td>`).join('')}
+}
+function renderCrafting(){crBuildTiers();renderCatalysts();renderLookup();renderSalvage()}
+$('tab-crafting').onclick=()=>showTab('crafting')
+
 /* ---------- start ---------- */
 const savedData=storage.get(DATA_KEY)
 if(savedData?.items?.length)useData(savedData,true);else useData(BUILTIN,false)
@@ -1825,8 +2142,8 @@ loadPlatforms();renderPlatforms()
 loadBuilder();sbReady=true;refreshBuilderData()
 renderCodes()
 loadSuffixes()
+renderCrafting()
 showTab(TAB_NAMES.includes(storage.get(TAB_KEY))?storage.get(TAB_KEY):'calc')
 </script>
 </body>
 </html>
-
