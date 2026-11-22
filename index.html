@@ -217,6 +217,19 @@ tbody tr:nth-child(odd) td{background:#333}
 .sb-result tr.resetter-row td{background:#36343d!important}
 .sb-result tr.portable-row td{background:#33393d!important}
 @media (max-width:1000px){.sb-grid{grid-template-columns:1fr}}
+.cd-table td{padding:4px 8px}
+.cd-table code,.cd-steps code,.note code{font-family:Consolas,"Courier New",monospace;background:#262626;border:1px solid #4a4a4a;padding:1px 6px;color:#fff;font-size:calc(var(--text-size) + 1px)}
+.cd-table tr.done td{opacity:.5}
+.cd-table tr.done code{text-decoration:line-through}
+.cd-badge{display:inline-block;padding:0 6px;border-radius:7px;font-size:11px;font-weight:600;border:1px solid}
+.cd-badge.ok{color:#5cbe5c;border-color:#5cbe5c;background:#2c3d30}
+.cd-badge.maybe{color:#fdcb58;border-color:#fdcb58;background:#3d3628}
+.cd-copy{min-height:0;padding:1px 9px}
+.cd-copy.copied{border-color:#5cbe5c;color:#5cbe5c}
+.cd-steps{margin:0;padding-left:20px;line-height:1.7}
+.cd-expired{display:flex;flex-wrap:wrap;gap:4px;max-height:260px;overflow:auto}
+.cd-expired span{font-family:Consolas,"Courier New",monospace;font-size:12px;color:#aaa;background:#2e2e2e;border:1px solid #444;padding:0 5px;text-decoration:line-through}
+.cd-box{width:16px;height:16px;cursor:pointer;accent-color:#5cbe5c}
 @media (max-width:760px){
  .topbar{flex-wrap:wrap}
  .summary,.summary tbody{display:block;width:100%}
@@ -256,7 +269,7 @@ tbody tr:nth-child(odd) td{background:#333}
 </head>
 <body>
 <header class="topbar">
- <nav class="tabs" role="tablist" aria-label="Pages"><button type="button" class="tab" role="tab" id="tab-calc" aria-controls="page-calc" aria-selected="true">Calculator</button><button type="button" class="tab" role="tab" id="tab-rebirth" aria-controls="page-rebirth" aria-selected="false" tabindex="-1">Rebirth</button><button type="button" class="tab" role="tab" id="tab-platforms" aria-controls="page-platforms" aria-selected="false" tabindex="-1">Platforms</button><button type="button" class="tab" role="tab" id="tab-builder" aria-controls="page-builder" aria-selected="false" tabindex="-1">Setup Builder</button></nav>
+ <nav class="tabs" role="tablist" aria-label="Pages"><button type="button" class="tab" role="tab" id="tab-calc" aria-controls="page-calc" aria-selected="true">Calculator</button><button type="button" class="tab" role="tab" id="tab-rebirth" aria-controls="page-rebirth" aria-selected="false" tabindex="-1">Rebirth</button><button type="button" class="tab" role="tab" id="tab-platforms" aria-controls="page-platforms" aria-selected="false" tabindex="-1">Platforms</button><button type="button" class="tab" role="tab" id="tab-builder" aria-controls="page-builder" aria-selected="false" tabindex="-1">Setup Builder</button><button type="button" class="tab" role="tab" id="tab-codes" aria-controls="page-codes" aria-selected="false" tabindex="-1">Codes</button></nav>
  <div class="top-right">
   <span id="data-status"></span>
   <button type="button" class="icon-btn" id="load-btn" title="Read item data from an updated copy of the MPU site's index.html">
@@ -563,6 +576,44 @@ tbody tr:nth-child(odd) td{background:#333}
  <p class="note"><b>How it builds:</b> cash needed = rebirth price × 1,000<sup>skips</sup>, and ore value = ore base value × furnace × resetters × everything in your lines × blasters &amp; portables (the MPU site's model). Your setup is a row of <b>lines</b>: give each one a length in units and choose the resetter at its end (Auto uses the strongest resetters you've marked). The ore goes through Line 1, its resetter, Line 2, and so on, then into the furnace. An item only upgrades the ore once per reset cycle, so the same item twice before a resetter doesn't count (it's flagged), and each copy in a line needs a copy you own. Add items by hand with <b>+ Add item</b>, or press <b>⚡ Auto build</b> to fill the lines from the items you've marked as owned: it uses the best multiplier-per-unit items first, fits each one into the line with the least space left, drops anything the target doesn't need, and can keep your manual picks or rebuild every line. "N Resetters" states and entries that already count extra Midas uses aren't offered, because lines, shields and blasters are worked out here instead. Many items have conditions (wet ore, Havium, other items required): check each line's Conditions column.</p>
  <p class="note"><b>Midas, Void Drive &amp; portables:</b> each blaster use has a death roll (Midas 1 in 3) that uses up a shield; with no shields left the ore dies. Your best owned blaster gets as many uses along your lines as keep survival at or above your target (MPU site default 60%, starting from 3 shields). Turtle Dignifier (+1) and Tortoise Fortifier (+3) add shields once per ore when they're in a line. With <b>Void Drive</b> on, a Void Drive line comes after your last line: Void Drive (×100) resets shields to 15, then very fast conveyors carry the ore past blasters along the sides and straight into the furnace before it dies 3 seconds later. The ore never loops back through resetters after Void Drive. Total survival = survival before Void Drive × survival after it × the chance of surviving risky portables (Methuselah's Mask 1 in 12 per use, Deceptive Sorcery and Doom Mortar 1 in 20). Portables get their per-tag uses once per reset cycle, once-per-ore portables count once, only your best pulsar is used, Ion Field is 2.5× then 1.8× per tag, and ghosts run Future → Past → Present with each earlier ghost doubling the next. Portables and blasters take no line length.</p>
 </div>
+
+<div id="page-codes" role="tabpanel" aria-labelledby="tab-codes" hidden>
+ <section class="panel" aria-labelledby="cd-title">
+  <div class="panel-title" id="cd-title">Miner's Haven Codes</div>
+  <div class="panel-body">
+   <div class="sb-status info" id="cd-checked"></div>
+   <div class="breakdown-wrap">
+    <table class="breakdown cd-table">
+     <thead><tr><th class="center" title="Tick codes you've already redeemed">Redeemed</th><th>Code</th><th>Reward</th><th>Status</th><th></th></tr></thead>
+     <tbody id="cd-body"></tbody>
+    </table>
+   </div>
+   <div class="toolbar" style="margin-top:6px"><span class="left" id="cd-progress" style="color:var(--muted)"></span><span class="right"><button type="button" id="cd-copy-all">Copy all working codes</button><button type="button" id="cd-reset">Untick all</button></span></div>
+  </div>
+ </section>
+ <div class="rb-grid">
+  <section class="panel" aria-labelledby="cd-how-title">
+   <div class="panel-title" id="cd-how-title">How to Redeem</div>
+   <div class="panel-body">
+    <ol class="cd-steps">
+     <li>Join Miner's Haven on Roblox.</li>
+     <li>Open <b>Settings</b> with the cog on the left side of the screen.</li>
+     <li>Type or paste the code into the <b>Enter Code</b> box.</li>
+     <li>Press <b>Redeem</b>.</li>
+    </ol>
+    <p class="note">Codes are case-sensitive and the punctuation matters (for example <code>ElevenYears!!</code>), so copy them with the buttons. Each code works once per account.</p>
+   </div>
+  </section>
+  <section class="panel" aria-labelledby="cd-exp-title">
+   <div class="panel-title" id="cd-exp-title">Expired Codes</div>
+   <div class="panel-body">
+    <p class="note" style="margin-top:0">These no longer work. Listed so you don't waste time on old lists.</p>
+    <div class="cd-expired" id="cd-expired"></div>
+   </div>
+  </section>
+ </div>
+ <p class="note" id="cd-sources"></p>
+</div>
 </main>
 <div class="toast" id="toast" role="status" hidden></div>
 
@@ -866,7 +917,7 @@ $('reset-data').onclick=()=>{storage.del(DATA_KEY);useData(BUILTIN,false);state.
 
 
 /* ---------- tabs ---------- */
-const TAB_KEY='mpucalc.tab.v1',TAB_NAMES=['calc','rebirth','platforms','builder']
+const TAB_KEY='mpucalc.tab.v1',TAB_NAMES=['calc','rebirth','platforms','builder','codes']
 function showTab(name,focus=false){
  for(const n of TAB_NAMES){
   const on=n===name,tab=$('tab-'+n)
@@ -1627,6 +1678,49 @@ $('sb-clear-all').onclick=()=>{
 $('tab-builder').onclick=()=>showTab('builder')
 
 
+
+/* ---------- codes ---------- */
+const CODES_CHECKED='22 November 2026'
+const CODES=[
+ {code:'leftovercandy',reward:'500K Candies',status:'ok'},
+ {code:'hogog',reward:'1 Hogog',status:'ok'},
+ {code:'mysoupisaboy',reward:'20 Blobcat Walls',status:'ok'},
+ {code:'MakeYourDestiny',reward:'5 Blobcat Plushies',status:'ok'},
+ {code:'BagelHeart',reward:'5 Blobcat Dabs',status:'ok'},
+ {code:'twelvetosixteen',reward:'5 Blobcat Blankets',status:'ok'},
+ {code:'RestEasyNow',reward:'1 Yoda',status:'ok'},
+ {code:'SLUMBER',reward:'1 Ore Gielder',status:'ok'},
+ {code:'ItsWonderful',reward:'1 Iron Flakes Mine',status:'ok'},
+ {code:'ElevenYears!!',reward:'111 uC',status:'maybe'},
+ {code:'OhSoGenerous',reward:'Shiny Guarantee',status:'maybe'}
+]
+const EXPIRED_CODES=['GiveMeMyShinyGuarantee','GoldIsVeryHeavy','CloverBloom!','My g baza','Christmas2023','SpookyTime','FRIGHTFOLLY','EIGHTAMAZINGYEARS','BONUSBOXES','HAPPYEASTER','MERRILYMERRY','Aphrod','CHRISTMAS22','toomanybugs','wowspookyday','HALLOWEEN22!','blackfridaycode','88888888','EightIsGreat','ISIAAL','LuckIsReal','FREECLOVERS','HaveAGreatChristmas!','pleasejusttakeone','HappyHalloween!','TenCheers!!!','OneMoreForGoodLuck!','HaveASlice','OpenYourPresents','TENMILLIONREBIRTHS???','restoredata','resetunreals','ImGettingOld','TooManyEggs','EASTER25','HIFROMAPHRO','FREECLOVERS50','LuckIsMaybeReal','MERRYMERRYCHRISTMAS','FESTIVITIES','CHRISTMAS2025','TalonIsRefusingToAddCodes','EASTER???','EggsEggsAndEggs','EasterBunnyWasHere','EASTER2024','LuckyLuckyLucky','PATTYSDAY2024','ShinyLuck','SANTAGIVEME','AllIWantForChiristmasIsUc','BIRTHDAYBOX','BIRTHDAY7','MIDASBLASTEROMG','APRILFOOL22','christmaseve21','CHRISTMAS21','Winter2021','sorryforthedelay','PUMPKINSANDSTUFF','WOOOOOW','Whats9+10?','Halloween2020','spookyghost','eternal','SPOOKTOBER','unrealcodedude','ReincarnationHype','Holidays2019','HappyHolidays','twitchcoins!','Valentine','HappyNewYears','GoAhead.RedeemIt','MinersHavenIsBack','communistmanifesobestmanifesto','aSingleCoin','howfestive','wowadevstream??','KaBOOOOM','festiveseason','secretchristmascode','teleporters','easterpart1','metaverse','SIXYEARS','LETSGOOO','FUTURE','FancyGrass','whatayear','ancientcode','YesItIsNostalgicToMe','EXOTICDAY2020','DragonThatIsShockinglyLucky','Rthro','HeadStart']
+const CODES_KEY='mpucalc.codes.v1'
+let redeemed=storage.get(CODES_KEY)||{}
+async function copyText(text){try{await navigator.clipboard.writeText(text);return true}catch{const ta=document.createElement('textarea');ta.value=text;ta.style.position='fixed';ta.style.opacity='0';document.body.append(ta);ta.select();let ok=false;try{ok=document.execCommand('copy')}catch{}ta.remove();return ok}}
+function renderCodes(){
+ const ok=CODES.filter(c=>c.status==='ok').length,maybe=CODES.length-ok
+ $('cd-checked').innerHTML=`<b>${ok} working code${ok===1?'':'s'}</b>${maybe?` and ${maybe} that may still work`:''}, last checked <b>${CODES_CHECKED}</b>. Codes can expire at any time.`
+ $('cd-body').innerHTML=CODES.map((c,i)=>`<tr class="${redeemed[c.code]?'done':''}">
+  <td class="center"><input type="checkbox" class="cd-box" data-i="${i}" ${redeemed[c.code]?'checked':''} aria-label="Redeemed ${esc(c.code)}"></td>
+  <td><code>${esc(c.code)}</code></td><td>${esc(c.reward)}</td>
+  <td>${c.status==='ok'?'<span class="cd-badge ok">Working</span>':'<span class="cd-badge maybe" title="Listed as active on some sites but not verified recently">Unconfirmed</span>'}</td>
+  <td><button type="button" class="cd-copy" data-i="${i}">Copy</button></td></tr>`).join('')
+ const n=CODES.filter(c=>redeemed[c.code]).length
+ $('cd-progress').textContent=`${n} of ${CODES.length} redeemed`
+ $('cd-expired').innerHTML=EXPIRED_CODES.map(c=>`<span>${esc(c)}</span>`).join('')
+ $('cd-sources').innerHTML=`Sources: <a href="https://robloxden.com/game-codes/miners-haven" target="_blank" rel="noopener noreferrer">RobloxDen</a> (checked ${CODES_CHECKED}), <a href="https://minershaven.fandom.com/wiki/Codes" target="_blank" rel="noopener noreferrer">Miner's Haven Wiki: Codes</a>. If a code here has expired, check those pages for the newest list.`
+}
+$('cd-body').addEventListener('click',async ev=>{
+ const b=ev.target.closest('.cd-copy');if(!b)return
+ const c=CODES[b.dataset.i];const ok=await copyText(c.code)
+ b.textContent=ok?'Copied!':'Copy failed';b.classList.toggle('copied',ok);setTimeout(()=>{b.textContent='Copy';b.classList.remove('copied')},1500)
+})
+$('cd-body').addEventListener('change',ev=>{const box=ev.target.closest('.cd-box');if(!box)return;const c=CODES[box.dataset.i];if(box.checked)redeemed[c.code]=true;else delete redeemed[c.code];storage.set(CODES_KEY,redeemed);renderCodes()})
+$('cd-copy-all').onclick=async()=>{const list=CODES.filter(c=>c.status==='ok'&&!redeemed[c.code]).map(c=>c.code);if(!list.length){toast('No unredeemed working codes left');return}toast(await copyText(list.join('\n'))?`Copied ${list.length} code${list.length===1?'':'s'} (one per line)`:'Copy failed')}
+$('cd-reset').onclick=()=>{const before={...redeemed};if(!Object.keys(before).length)return;redeemed={};storage.set(CODES_KEY,redeemed);renderCodes();toast('Unticked all codes','Undo',()=>{redeemed=before;storage.set(CODES_KEY,redeemed);renderCodes()})}
+$('tab-codes').onclick=()=>showTab('codes')
+
 /* ---------- start ---------- */
 const savedData=storage.get(DATA_KEY)
 if(savedData?.items?.length)useData(savedData,true);else useData(BUILTIN,false)
@@ -1640,6 +1734,7 @@ update()
 loadRebirth();rbReady=true;renderRebirth()
 loadPlatforms();renderPlatforms()
 loadBuilder();sbReady=true;refreshBuilderData()
+renderCodes()
 showTab(TAB_NAMES.includes(storage.get(TAB_KEY))?storage.get(TAB_KEY):'calc')
 </script>
 </body>
