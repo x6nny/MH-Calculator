@@ -383,7 +383,34 @@ tbody tr:nth-child(odd) td{background:#333}
 .fx-stasis{letter-spacing:3px}
 .fx-stasis::after{content:"⏸";margin-left:8px;color:#a6f0ff;animation:radpulse 2s infinite}
 @media (prefers-reduced-motion:reduce){.fx,.fx>span,.fx::before,.fx::after{animation:none!important}}
+.bx-opts{display:flex;flex-wrap:wrap;gap:8px 18px;align-items:center;border-top:1px solid #535353}
+.bx-opts label{display:inline-flex;align-items:center;gap:6px;color:var(--muted)}
+.bx-opts input[type=number]{width:70px;border-radius:0}
+.bx-calc-note{flex:1 1 100%;color:#cfcfcf;font-size:12.5px;line-height:1.5}
+.bx-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(400px,1fr));gap:10px}
+.bx-card{border:1px solid #535353;background:#333;display:flex;flex-direction:column;min-width:0}
+.bx-card.bx-limited{border-color:#6a5a30}
+.bx-head{display:flex;align-items:center;gap:8px;padding:6px 10px;background:#3d3d3d;border-bottom:1px solid #4a4a4a}
+.bx-head .spacer{flex:1}
+.bx-name{font-weight:700;color:#fff;font-size:15px}
+.bx-price{font-weight:700;color:#8fd1ff;font-variant-numeric:tabular-nums}
+.bx-odds td{padding:2px 6px}
+.bx-odds .bx-tier{width:auto;min-width:86px;font-size:11px}
+.bx-sub{display:block;color:var(--muted);font-size:11px}
+.bx-bar{display:inline-block;width:60px;height:7px;background:#262626;border:1px solid #4a4a4a;margin-right:6px;vertical-align:middle;position:relative;overflow:hidden}
+.bx-bar span{position:absolute;inset:0 auto 0 0}
+.bx-relics{padding:5px 10px;border-top:1px solid #444;display:flex;flex-wrap:wrap;gap:4px;align-items:center;font-size:12.5px}
+.bx-src{padding:4px 10px;border-top:1px solid #444;font-size:12.5px}
+.bx-src ul{margin:4px 0;padding-left:18px;color:#cfcfcf}
+.bx-note{padding:4px 10px 6px;color:#fdcb58;font-size:12px;border-top:1px solid #444}
+.bx-summary select,.bx-summary input{font-size:inherit}
+.bx-summary .sub{display:block;font-size:11px;color:var(--muted);font-weight:400}
+.bx-pool-group{margin-bottom:8px}
+.bx-warn{color:#ff9a7a}
 @media (max-width:760px){
+ .bx-cards{grid-template-columns:minmax(0,1fr)}
+ .bx-odds .bx-bar{display:none}
+
  .st-cards{grid-template-columns:1fr}
  .st-row{grid-template-columns:1fr;gap:1px}
 
@@ -431,7 +458,7 @@ tbody tr:nth-child(odd) td{background:#333}
 </head>
 <body>
 <header class="topbar">
- <nav class="tabs" role="tablist" aria-label="Pages"><button type="button" class="tab" role="tab" id="tab-calc" aria-controls="page-calc" aria-selected="true">Calculator</button><button type="button" class="tab" role="tab" id="tab-rebirth" aria-controls="page-rebirth" aria-selected="false" tabindex="-1">Rebirth</button><button type="button" class="tab" role="tab" id="tab-platforms" aria-controls="page-platforms" aria-selected="false" tabindex="-1">Platforms</button><button type="button" class="tab" role="tab" id="tab-builder" aria-controls="page-builder" aria-selected="false" tabindex="-1">Setup Builder</button><button type="button" class="tab" role="tab" id="tab-codes" aria-controls="page-codes" aria-selected="false" tabindex="-1">Codes</button><button type="button" class="tab" role="tab" id="tab-suffixes" aria-controls="page-suffixes" aria-selected="false" tabindex="-1">Cash Suffixes</button><button type="button" class="tab" role="tab" id="tab-crafting" aria-controls="page-crafting" aria-selected="false" tabindex="-1">Crafting</button><button type="button" class="tab" role="tab" id="tab-items" aria-controls="page-items" aria-selected="false" tabindex="-1">Items</button><button type="button" class="tab" role="tab" id="tab-status" aria-controls="page-status" aria-selected="false" tabindex="-1">Status Effects</button></nav>
+ <nav class="tabs" role="tablist" aria-label="Pages"><button type="button" class="tab" role="tab" id="tab-calc" aria-controls="page-calc" aria-selected="true">Calculator</button><button type="button" class="tab" role="tab" id="tab-rebirth" aria-controls="page-rebirth" aria-selected="false" tabindex="-1">Rebirth</button><button type="button" class="tab" role="tab" id="tab-platforms" aria-controls="page-platforms" aria-selected="false" tabindex="-1">Platforms</button><button type="button" class="tab" role="tab" id="tab-builder" aria-controls="page-builder" aria-selected="false" tabindex="-1">Setup Builder</button><button type="button" class="tab" role="tab" id="tab-codes" aria-controls="page-codes" aria-selected="false" tabindex="-1">Codes</button><button type="button" class="tab" role="tab" id="tab-suffixes" aria-controls="page-suffixes" aria-selected="false" tabindex="-1">Cash Suffixes</button><button type="button" class="tab" role="tab" id="tab-crafting" aria-controls="page-crafting" aria-selected="false" tabindex="-1">Crafting</button><button type="button" class="tab" role="tab" id="tab-items" aria-controls="page-items" aria-selected="false" tabindex="-1">Items</button><button type="button" class="tab" role="tab" id="tab-status" aria-controls="page-status" aria-selected="false" tabindex="-1">Status Effects</button><button type="button" class="tab" role="tab" id="tab-boxes" aria-controls="page-boxes" aria-selected="false" tabindex="-1">Mystery Boxes</button></nav>
  <div class="top-right">
   <span id="data-status"></span>
   <button type="button" class="icon-btn" id="load-btn" title="Read item data from an updated copy of the MPU site's index.html">
@@ -916,7 +943,48 @@ tbody tr:nth-child(odd) td{background:#333}
  </section>
  <p class="note">Source: <a href="https://minershaven.fandom.com/wiki/Ore_Properties" target="_blank" rel="noopener noreferrer">Miner's Haven Wiki: Ore Properties</a>. "Items that mention…" searches every wiki item's effects text, so a few matches may only mention the effect (for example, an item that blocks it).</p>
 </div>
+
+<div id="page-boxes" role="tabpanel" aria-labelledby="tab-boxes" hidden>
+ <section class="panel" aria-labelledby="bx-calc-title">
+  <div class="panel-title" id="bx-calc-title">Mystery Box Calculator</div>
+  <table class="summary bx-summary">
+   <thead><tr><th>Box:</th><th>Want:</th><th>Boxes to open:</th><th>Chance of at least one:</th><th>Expected:</th><th>Total cost:</th><th><span id="bx-conf-label">Boxes for 90%:</span></th></tr></thead>
+   <tbody><tr>
+    <td data-label="Box:"><select id="bx-box" class="rb-input" style="max-width:190px" aria-label="Box"></select></td>
+    <td data-label="Want:"><select id="bx-tier" class="rb-input" style="max-width:200px" aria-label="Tier you want"></select></td>
+    <td data-label="Boxes to open:"><input type="number" id="bx-n" class="rb-input" min="0" step="1" aria-label="Number of boxes"></td>
+    <td class="big" data-label="Chance of at least one:" id="bx-out-chance">–</td>
+    <td class="big" data-label="Expected:" id="bx-out-expect">–</td>
+    <td class="big" data-label="Total cost:" id="bx-out-cost">–</td>
+    <td class="big" data-label="Boxes for chance:" id="bx-out-need">–</td>
+   </tr></tbody>
+  </table>
+  <div class="panel-body bx-opts">
+   <label>Target chance <input type="number" id="bx-conf" min="1" max="99.99" step="any" aria-label="Target chance percent"> %</label>
+   <label><input type="checkbox" id="bx-clover"> Use a Lucky Clover on each box (+25 uC)</label>
+   <div class="bx-calc-note" id="bx-calc-note"></div>
+  </div>
+ </section>
+
+ <section class="panel" aria-labelledby="bx-list-title">
+  <div class="panel-title" id="bx-list-title">Every Mystery Box</div>
+  <div class="panel-body">
+   <p class="note" style="margin-top:0"><b>Avg boxes</b> = how many boxes it takes on average to get one item of that tier (1 ÷ chance). <b>For 90%</b> = boxes for a 90% chance of at least one. <b>Avg cost</b> = average uC spent per item at Spook McDooks' price. Free boxes come from Research Crates, daily gifts, codes and rebirths, so real costs are often lower.</p>
+   <div class="bx-cards" id="bx-cards"></div>
+  </div>
+ </section>
+
+ <section class="panel" aria-labelledby="bx-pool-title">
+  <div class="panel-title" id="bx-pool-title">What You Can Unbox</div>
+  <div class="panel-body">
+   <div class="st-filters" id="bx-pool-tabs" role="group" aria-label="Item tier"></div>
+   <div id="bx-pool" style="margin-top:8px"></div>
+  </div>
+ </section>
+ <p class="note"><b>Lucky Clovers</b> (25 uC from Spook McDooks, or from Research Crates) don't raise the odds, but let a win give 2–3 copies of the item, for any tier including Vintages, Exotics and Relics. You can switch them off in the box menu. The spinning roulette is just for show: the item is already decided when you open the box. Source: <a href="https://minershaven.fandom.com/wiki/Mystery_Boxes" target="_blank" rel="noopener noreferrer">Miner's Haven Wiki: Mystery Boxes</a>.</p>
+</div>
 </main>
+
 
 
 <div class="toast" id="toast" role="status" hidden></div>
@@ -1266,7 +1334,7 @@ $('reset-data').onclick=()=>{storage.del(DATA_KEY);useData(BUILTIN,false);state.
 
 
 /* ---------- tabs ---------- */
-const TAB_KEY='mpucalc.tab.v1',TAB_NAMES=['calc','rebirth','platforms','builder','codes','suffixes','crafting','items','status']
+const TAB_KEY='mpucalc.tab.v1',TAB_NAMES=['calc','rebirth','platforms','builder','codes','suffixes','crafting','items','status','boxes']
 function showTab(name,focus=false){
  for(const n of TAB_NAMES){
   const on=n===name,tab=$('tab-'+n)
@@ -2454,6 +2522,89 @@ $('st-search').addEventListener('input',renderStatus)
 $('st-filters').addEventListener('click',ev=>{const b=ev.target.closest('button[data-g]');if(!b)return;stFilter=b.dataset.g;renderStatus()})
 $('tab-status').onclick=()=>showTab('status')
 
+/* ---------- mystery boxes ---------- */
+// [name, uC price from Spook McDooks (null = can't buy), group, sources, odds {tier:%}, relics, note]
+const BOXES=[
+ ['Regular Box',15,'Normal',['Box UI / Spook McDooks (15 uC)',"Spook McDooks's free box",'Daily Lobster Telephone call','Various Research Crates'],{Premium:80,Shop:18,Vintage:1,Exotic:1},[],''],
+ ['Unreal Box',40,'Normal',['Box UI / Spook McDooks (40 uC)',"Spook McDooks's free box",'Fargield','Various Research Crates','3-day gift streak'],{Premium:84,Shop:7,Luxury:5,Vintage:2,Exotic:2},[],'2% chance to also give a Magnificent Box (4% with Premium membership).'],
+ ['Inferno Box',50,'Normal',['Spook McDooks (50 uC)',"Spook McDooks's free box",'Fargield','Daily Lobster Telephone call','Diamond, Executive, Giant & Blazing Research Crates','Rebirth','5-day gift streak'],{Premium:85,Luxury:5,Shop:5,Vintage:3,Exotic:2,Relic:0.5},['Blazing Agriculture'],''],
+ ['Luxury Box',80,'Normal',['Spook McDooks (80 uC)',"Spook McDooks's free box",'Diamond Research Crates','Daily $1 CENT rebirth'],{Premium:55,Luxury:40,Vintage:3,Exotic:2},[],''],
+ ['Red-Banded Box',100,'Normal',['Spook McDooks (100 uC)',"Spook McDooks's free box",'Daily Lobster Telephone call','Shadow, Cursed & Diamond Research Crates','Daily $1 CENT rebirth'],{Premium:35,Contraband:35,Luxury:25,Vintage:3,Exotic:2,Relic:0.5},['CONTRALAND'],'Always lucky (can give 2–3 copies without using a clover).'],
+ ['Spectral Box',200,'Normal',['Spook McDooks (200 uC)',"Spook McDooks's free box",'Blazing Research Crates','7-day gift streak'],{Premium:75,Luxury:10,Contraband:5,Vintage:5,Exotic:5,Relic:0.5},['Pillars of Creation'],'5.5% chance to also give a Heavenly Box.'],
+ ['Magnificent Box',null,'Normal',['2% chance when opening an Unreal Box (4% with Premium membership)','Some codes'],{Vintage:40,Premium:25,Exotic:20,Luxury:5},[],''],
+ ['Heavenly Box',null,'Normal',['5.5% chance when opening a Spectral Box','Given by developers','Reaching 1 million lives'],{Vintage:49.75,Exotic:49.75,Relic:0.5},['Iron Mine','Slightly Upscaled Worldly Illuminator'],''],
+ ['Pumpkin Box',60,'Limited',['Daily Gifts','Spook McDooks (60 uC)','Evil/Mega Pumpkins and Candycorn Research Crates (Halloween)','Some codes'],{Halloween:50,Premium:40,Contraband:5,Vintage:3,Exotic:2,Relic:0.5},['Solar Apocalypse','Awakened Jack O Lantern'],'Halloween event only.'],
+ ['Festive Box',60,'Limited',['Spook McDooks (60 uC)','Daily Gifts','Golden Gifts','Gifts from Santa (50% chance)','Some codes'],{Holiday:50,Premium:40,Luxury:5,Vintage:3,Exotic:2,Relic:0.5},['Delightful Gift of Mint','Delightful Gift of Sugar'],'Christmas event only.'],
+ ['Birthday Box',60,'Limited',['Spook McDooks (60 uC)','Various Research Crates','Daily Gifts','Some codes'],{Birthday:50,Premium:40,Luxury:5,Vintage:3,Exotic:2},[],'Birthday event only.'],
+ ['Twitch Box',null,'Limited',['Converted from old Twitch Coins'],{Premium:50,Twitch:40,Luxury:5,Vintage:3,Exotic:2},[],'Exclusive exotics: Twitchite Mine, Kappa Investor.'],
+ ['Easter Box',60,'Limited',['Spook McDooks (60 uC)','Daily Gifts','Easter Eggs around the map (1–3)','Falling eggs','Some codes'],{Easter:50,Premium:40,Luxury:5,Vintage:3,Exotic:2},['The Egg Portal'],'Easter event only. The wiki lists The Egg Portal as its special item.'],
+ ['Cake Raffle Box',500,'Limited',['Daily Gifts','Spook McDooks (500 uC)'],{Cake:100},[],'Only Cake Raffle exotics (no Vintages).'],
+]
+const BOX_TIER_STYLE={Premium:'Premium',Shop:'Basic',Vintage:'Vintage',Exotic:'Exotic',Luxury:'Luxury',Contraband:'Contraband',Relic:'Relic',Halloween:'Collectible',Holiday:'Collectible',Birthday:'Collectible',Twitch:'Exotic',Easter:'Eggxotic',Cake:'Exotic'}
+const BOX_TIER_LABEL={Shop:'Shop items',Halloween:'Halloween items',Holiday:'Holiday items',Birthday:'Birthday items',Twitch:'Twitch items',Easter:'Easter items',Cake:'Cake Raffle exotics'}
+const BOX_POOLS={
+ Exotics:[['Seasonal (any box)',['Rainbow Refiner',"Cupid's Arrow",'The Heartbreaker','Deluxe Beehive','Citrus Enhancer','Pot of Gold-inator',"Leprechaun's Hat",'Honeycomb Solace','Grand Willow','Big Bunny','Royal Rabbit','Bunny Infuser','Ghoul Lagoon','Sacred Totem','Windforce Shrine','Acorn Avenue','Redwood Compass','Eerie Marsh','Parasitic Invader','SpookStorm-X','Ethereal Sanctuary','Icedagger Shrine','Tree of Giving','Grand Fruitcake','Gingerbreadium Mine']],['Twitch Box only',['Twitchite Mine','Kappa Investor']],['Cake Raffle Box only',["Angel's Cake",'Belated 4th Birthday Cake','Citrus Cake',"Devil's Cake",'Dragon Cake','Forsaken Cake','Honeycomb Cake','Jelly Cake','Peanut Butter Cake','Smore Cake','The Cherry Pie']]],
+ Vintages:[['Life 0+',['Adowable Guardian','Doomsday Pad','Noobite Mine']],['Life 5+',['Ore Quasar',"'Ol Faithful"]],['Life 10+',['The Banhammer']],['Life 20+',['Mini Infuser','The Sunken Past']],['Life 50+',['Resetting Infuser','Thingamajig']],['Life 70+',['Canis Processus']],['Life 100+',['Boomite Mine','Dreamcatcher','The Holy Cheese']],['Life 700+',['Stratospheric Refiner']]],
+ Luxuries:[['',['Base Colorizer','Base Materializer','Freon Bombarder','Glow Infuser','Ore Painter','Super Computer','Weary Wall','Reinforced Security Wall','Octo Flood Light','Team Colorizer']]],
+ Contrabands:[['Red-Banded, Spectral & Pumpkin boxes',['Alien Relic','Chemical Refiner','Diamond Falls','Robotic Enhancer','Blazing Annihilator','Helium Blaster','Hydraulic Presser','Maintenance Supporter']]],
+ Relics:[['Inferno Box',['Blazing Agriculture']],['Red-Banded Box',['CONTRALAND']],['Spectral Box',['Pillars of Creation']],['Heavenly Box',['Iron Mine','Slightly Upscaled Worldly Illuminator']],['Pumpkin Box',['Awakened Jack O Lantern','Solar Apocalypse']],['Festive Box',['Delightful Gift of Mint','Delightful Gift of Sugar']]],
+}
+const CLOVER_UC=25
+const BX_KEY='mpucalc.boxes.v1'
+let bx=Object.assign({box:'Spectral Box',tier:'Exotic',n:'100',conf:'90',clover:false,pool:'Exotics'},storage.get(BX_KEY)||{})
+const boxesFor=(p,c)=>p>=1?1:p<=0?Infinity:Math.ceil(Math.log(1-c)/Math.log(1-p))
+const fmtN=n=>Number.isFinite(n)?Math.round(n).toLocaleString('en-US'):'∞'
+const fmtUC=n=>Number.isFinite(n)?Math.round(n).toLocaleString('en-US')+' uC':'–'
+function boxTierBadge(t){const s=tierMap.get(BOX_TIER_STYLE[t]||t)||{color:'#ccc',tint:'#4d4d4d'};return `<span class="tier-badge bx-tier" style="--tier:${s.color};--tint:${s.tint}">${esc(t)}</span>`}
+function renderBoxCards(){
+ $('bx-cards').innerHTML=BOXES.map(([name,uc,group,src,odds,relics,note])=>{
+  const rows=Object.entries(odds).sort((a,b)=>b[1]-a[1]).map(([t,pc])=>{const p=pc/100,exp=1/p,b90=boxesFor(p,.9)
+   return `<tr><td>${boxTierBadge(t)}${BOX_TIER_LABEL[t]?`<span class="bx-sub">${esc(BOX_TIER_LABEL[t])}</span>`:''}</td><td class="numeric"><div class="bx-bar"><span style="width:${Math.max(1,pc)}%;background:${(tierMap.get(BOX_TIER_STYLE[t]||t)||{color:'#888'}).color}"></span></div>${pc}%</td><td class="numeric" title="On average you'll get one every this many boxes">${fmtN(exp)}</td><td class="numeric" title="Boxes for a 90% chance of at least one">${fmtN(b90)}</td>${uc?`<td class="numeric">${fmtUC(exp*uc)}</td>`:''}</tr>`}).join('')
+  return `<article class="bx-card bx-${group.toLowerCase()}"><div class="bx-head"><span class="bx-name">${esc(name)}</span>${group==='Limited'?'<span class="it-tag">Limited</span>':''}<span class="spacer"></span><span class="bx-price">${uc?`${uc} uC`:'Can\'t buy'}</span></div>
+   <div class="breakdown-wrap"><table class="breakdown bx-odds"><thead><tr><th>Tier</th><th class="numeric">Chance</th><th class="numeric" title="Average boxes per item of this tier">Avg boxes</th><th class="numeric">For 90%</th>${uc?'<th class="numeric">Avg cost</th>':''}</tr></thead><tbody>${rows}</tbody></table></div>
+   ${relics.length?`<div class="bx-relics"><b>${name==='Easter Box'?'Special':'Relic'}${relics.length>1?'s':''}:</b> ${relics.map(r=>`<span class="cr-chip">${crItem(r)}</span>`).join('')}${relics.length>1&&odds.Relic?`<span class="bx-sub">Each relic ≈ ${(odds.Relic/relics.length).toLocaleString('en-US')}% if they're equally likely</span>`:''}</div>`:''}
+   <details class="st-more bx-src"><summary>Where to get it (${src.length})</summary><ul>${src.map(s=>`<li>${esc(s)}</li>`).join('')}</ul></details>
+   ${note?`<div class="bx-note">${esc(note)}</div>`:''}${(()=>{const s=Object.values(odds).reduce((x,y)=>x+y,0);return Math.abs(s-100)>.01?`<div class="bx-note bx-warn">The wiki's odds for this box add up to ${s}%, not 100%, so treat them as approximate.</div>`:''})()}</article>`}).join('')
+}
+function renderBoxCalc(){
+ const box=BOXES.find(b=>b[0]===bx.box)||BOXES[0],[name,uc,,,odds,relics]=box
+ const tierSel=$('bx-tier'),tiers=Object.keys(odds).sort((a,b)=>odds[a]-odds[b])
+ tierSel.innerHTML=tiers.map(t=>`<option value="${esc(t)}">${esc(t)} (${odds[t]}%)</option>`).join('')+relics.filter(()=>relics.length>1&&odds.Relic).map(r=>`<option value="relic:${esc(r)}">Only ${esc(r)} (${(odds.Relic/relics.length).toLocaleString('en-US')}%)</option>`).join('')
+ if(![...tierSel.options].some(o=>o.value===bx.tier))bx.tier=tiers[0]
+ tierSel.value=bx.tier
+ const pc=bx.tier.startsWith('relic:')?odds.Relic/relics.length:odds[bx.tier],p=pc/100
+ const n=Math.max(0,Math.floor(Number(bx.n)||0)),conf=Math.min(99.99,Math.max(1,Number(bx.conf)||90))/100
+ const atLeast=1-(1-p)**n,expect=n*p,need=boxesFor(p,conf),perBox=(uc||0)+(bx.clover?CLOVER_UC:0)
+ $('bx-out-chance').textContent=n?(atLeast*100).toLocaleString('en-US',{maximumFractionDigits:atLeast>.999?4:2})+'%':'–'
+ $('bx-out-expect').textContent=n?expect.toLocaleString('en-US',{maximumFractionDigits:2}):'–'
+ $('bx-out-cost').textContent=uc?fmtUC(n*perBox):'Can\'t buy'
+ $('bx-out-need').innerHTML=`${fmtN(need)}<span class="sub">${uc?fmtUC(need*perBox):''}</span>`
+ $('bx-conf-label').textContent=`Boxes for ${(conf*100).toLocaleString('en-US')}%:`
+ const extra=[]
+ if(name==='Spectral Box'){const ph=.055;extra.push(`Each Spectral Box also has a 5.5% chance of a bonus Heavenly Box: ${n?`about ${(n*ph).toLocaleString('en-US',{maximumFractionDigits:1})} Heavenly Boxes from ${n}, `:''}≈ ${fmtUC(uc/ph)} per Heavenly Box on average.`)}
+ if(name==='Unreal Box'){extra.push(`Each Unreal Box also has a 2% (4% with Premium) chance of a bonus Magnificent Box: ≈ ${fmtUC(uc/.02)} (${fmtUC(uc/.04)} with Premium) per Magnificent Box on average.`)}
+ if(bx.clover)extra.push(`Lucky Clovers (${CLOVER_UC} uC each) don't change the odds, but a win can give 2–3 copies of the item.`)
+ if(name==='Red-Banded Box')extra.push('Red-Banded Boxes are always lucky, so you don\'t need clovers for extra copies.')
+ $('bx-calc-note').innerHTML=extra.map(e=>`<div>• ${esc(e)}</div>`).join('')
+ storage.set(BX_KEY,bx)
+}
+function renderBoxPools(){
+ $('bx-pool-tabs').innerHTML=Object.keys(BOX_POOLS).map(k=>`<button type="button" data-pool="${k}" aria-pressed="${k===bx.pool}">${k} (${BOX_POOLS[k].reduce((a,g)=>a+g[1].length,0)})</button>`).join('')
+ $('bx-pool').innerHTML=(BOX_POOLS[bx.pool]||[]).map(([label,items])=>`<div class="bx-pool-group">${label?`<div class="sb-subhead">${esc(label)}</div>`:''}<div class="cr-free">${items.map(n=>`<span class="cr-chip">${crItem(n)}</span>`).join('')}</div></div>`).join('')
+}
+function renderBoxes(){
+ const sel=$('bx-box');if(!sel.options.length)sel.innerHTML=BOXES.map(b=>`<option value="${esc(b[0])}">${esc(b[0])}${b[1]?` (${b[1]} uC)`:''}</option>`).join('')
+ sel.value=bx.box;$('bx-n').value=bx.n;$('bx-conf').value=bx.conf;$('bx-clover').checked=bx.clover
+ renderBoxCalc();renderBoxCards();renderBoxPools()
+}
+$('bx-box').addEventListener('change',e=>{bx.box=e.target.value;renderBoxCalc()})
+$('bx-tier').addEventListener('change',e=>{bx.tier=e.target.value;renderBoxCalc()})
+$('bx-n').addEventListener('input',e=>{bx.n=e.target.value;renderBoxCalc()})
+$('bx-conf').addEventListener('input',e=>{bx.conf=e.target.value;renderBoxCalc()})
+$('bx-clover').addEventListener('change',e=>{bx.clover=e.target.checked;renderBoxCalc()})
+$('bx-pool-tabs').addEventListener('click',e=>{const b=e.target.closest('button[data-pool]');if(!b)return;bx.pool=b.dataset.pool;storage.set(BX_KEY,bx);renderBoxPools()})
+$('tab-boxes').onclick=()=>showTab('boxes')
+
 /* ---------- start ---------- */
 const savedData=storage.get(DATA_KEY)
 if(savedData?.items?.length)useData(savedData,true);else useData(BUILTIN,false)
@@ -2472,6 +2623,7 @@ loadSuffixes()
 renderCrafting()
 itInit();renderItems()
 renderStatus()
+renderBoxes()
 showTab(TAB_NAMES.includes(storage.get(TAB_KEY))?storage.get(TAB_KEY):'calc')
 </script>
 </body>
